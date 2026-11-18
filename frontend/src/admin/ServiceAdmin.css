@@ -1,0 +1,373 @@
+/* --- Redigering af ydelser --- */
+.admin-field-help {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.admin-field-help code {
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  background: var(--blue-soft);
+  color: var(--ink);
+  font-size: 0.95em;
+}
+
+.svc-slug {
+  display: flex;
+  align-items: stretch;
+}
+
+.svc-slug-prefix {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.6rem;
+  border: 1.5px solid #dcdfe8;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  background: #f3f4f8;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.admin-field .svc-slug input {
+  border-radius: 0 8px 8px 0;
+  min-width: 0;
+}
+
+/* Ikonvælger */
+.svc-icons {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.svc-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.svc-icon-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  border: 2px solid #e1e4ec;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.svc-icon-option:hover {
+  border-color: var(--blue);
+}
+
+.svc-icon-option.selected {
+  border-color: var(--blue-dark);
+  background: var(--blue-soft);
+}
+
+.svc-icon-preview {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+}
+
+.svc-icon-option.selected .svc-icon-preview {
+  background: var(--blue-dark);
+  color: #fff;
+}
+
+.svc-section {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e6e8ef;
+}
+
+.svc-section-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.svc-cover {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.svc-cover img,
+.svc-cover-empty {
+  width: 220px;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.svc-cover-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 2px dashed #d5d8e2;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.svc-cover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Upload / YouTube-valg */
+.svc-mode {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin: 0.5rem 0 0.9rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: #eef0f5;
+}
+
+.svc-mode button {
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.svc-mode button.active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(43, 46, 74, 0.15);
+}
+
+.svc-dropzone-help {
+  flex-basis: 100%;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.svc-youtube {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.svc-youtube input {
+  flex: 1 1 260px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d5d8e2;
+  border-radius: 10px;
+  font: inherit;
+}
+
+.svc-youtube input:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: 1px;
+}
+
+.svc-progress {
+  position: relative;
+  height: 1.6rem;
+  margin: 0.75rem 0;
+  border-radius: 999px;
+  background: #eef0f5;
+  overflow: hidden;
+}
+
+.svc-progress span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--blue);
+  transition: width 0.2s ease;
+}
+
+.svc-progress em {
+  position: relative;
+  display: block;
+  line-height: 1.6rem;
+  text-align: center;
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.admin-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+.svc-danger {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  color: #a33;
+  font-size: 0.9rem;
+}
+
+.svc-delete-link {
+  color: #b32d2d;
+}
+
+.admin-btn.svc-delete {
+  background: #c73a3a;
+}
+
+.admin-btn.svc-delete:hover:not(:disabled) {
+  background: #a92e2e;
+}
+
+/* Listen over ydelser */
+.svc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.svc-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #e6e8ef;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.svc-row-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+}
+
+.svc-row-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.svc-row-main strong {
+  color: var(--ink);
+}
+
+.svc-row-url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: var(--blue-dark);
+}
+
+.svc-row-meta {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.svc-row-actions {
+  flex-shrink: 0;
+}
+
+.admin-thumb-actions button.svc-edit {
+  width: auto;
+  padding: 0 0.7rem;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .svc-row {
+    flex-wrap: wrap;
+  }
+
+  .svc-row-meta {
+    display: none;
+  }
+
+  .svc-row-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .svc-slug-prefix {
+    display: none;
+  }
+
+  .admin-field .svc-slug input {
+    border-radius: 8px;
+  }
+
+  .svc-cover img,
+  .svc-cover-empty {
+    width: 100%;
+  }
+}
+
+/* Knapperne i listen må ikke klemmes sammen */
+.svc-row-actions {
+  margin-top: 0;
+}
+
+.svc-row-actions button {
+  flex: 0 0 auto;
+  min-width: 34px;
+}
+
+.svc-section .admin-gallery {
+  margin-top: 1rem;
+}
+
+/* Plads på serveren (galleriet) */
+.gallery-storage {
+  margin: 0.6rem 0 0;
+}
+
+.gallery-storage.low {
+  color: #a33a2a;
+  font-weight: 600;
+}
+
+/* Advarsel (tilladt, men fx en stor baggrundsvideo) */
+.admin-warning {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: #fff4dc;
+  border: 1px solid #f0d48a;
+  color: #6b4a00;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}

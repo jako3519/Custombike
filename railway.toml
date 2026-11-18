@@ -1,0 +1,10 @@
+# Railway: byg med Dockerfile i roden og tjek at siden svarer efter deploy
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/api/texts"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

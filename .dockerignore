@@ -1,0 +1,13 @@
+**/node_modules
+**/bin
+**/obj
+**/dist
+**/dist-ssr
+**/.env
+**/.env.*
+.git
+.vs
+.vscode
+**/wwwroot/gallery/*
+!**/wwwroot/gallery/LÆS-MIG.txt
+**/geo/*.mmdb

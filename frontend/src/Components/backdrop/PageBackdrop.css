@@ -1,0 +1,94 @@
+/* --- Fast baggrundsbillede bag hele siden --- */
+.page-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* lvh: hele skærmen, også når mobilens adresselinje er skjult (ingen "hop" når man scroller) */
+  height: 100vh;
+  height: 100lvh;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* eget lag på grafikkortet: billedet tegnes ikke om, mens man scroller */
+  transform: translateZ(0);
+}
+
+.page-backdrop-image {
+  position: absolute;
+  inset: 0;
+  background-color: #3a2c22;
+  /* Uden billede: mørk træ-tone */
+  background-image:
+    repeating-linear-gradient(100deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 14px),
+    linear-gradient(135deg, #5a4232 0%, #2e231b 60%, #1d1712 100%);
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.03);
+}
+
+/* Baggrundsvideo (kun store skærme): toner frem over stillbilledet, når den spiller */
+.page-backdrop-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 0.8s ease;
+}
+
+.page-backdrop-video.playing {
+  opacity: 1;
+}
+
+.page-backdrop-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 10, 12, 0.55) 0%, rgba(10, 10, 12, 0.32) 45%, rgba(10, 10, 12, 0.5) 100%);
+}
+
+/* Alt indhold ligger over baggrunden */
+.page-backdrop ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Glas: halvgennemsigtigt hvidt med sløret baggrund --- */
+.glass-sheet {
+  --glass-bg: rgba(248, 246, 243, 0.8);
+  /* lidt mørkere grå tekst på glasset, så den også er let at læse over mørke dele af billedet */
+  --ink-soft: #464960;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+/* Mobil: lidt mindre sløring (billigere at tegne), lidt mere hvidt */
+@media (max-width: 640px) {
+  .glass-sheet {
+    --glass-bg: rgba(248, 246, 243, 0.84);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+}
+
+/* Browsere uden glas-effekt: næsten hvidt, så teksten altid er let at læse */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-sheet {
+    --glass-bg: rgba(248, 246, 243, 0.96);
+  }
+}
+
+/* Brugere der har slået gennemsigtighed fra i styresystemet */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-sheet {
+    --glass-bg: rgb(248, 246, 243);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

@@ -1,0 +1,201 @@
+/* Bundkort: spærrer ikke siden, ligger over indholdet men under admin-pop-ups */
+.cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 250;
+  padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.cookie-banner-card {
+  pointer-events: auto;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.4rem 1.3rem;
+  color: var(--ink);
+  background: rgba(248, 246, 243, 0.88);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 22px 22px 28px 22px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 -12px 40px rgba(43, 46, 74, 0.18);
+}
+
+.cookie-banner-text {
+  margin: 0 0 1rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.cookie-banner-text a {
+  color: var(--blue-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.75rem;
+}
+
+/* Afvis, Accepter alle og Gem valg har samme størrelse og vægt */
+.cookie-btn {
+  appearance: none;
+  min-width: 10.5rem;
+  padding: 0.7rem 1.15rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.cookie-btn:hover {
+  background: #1d1f35;
+  border-color: #1d1f35;
+}
+
+.cookie-btn-settings {
+  appearance: none;
+  margin-left: auto;
+  padding: 0.45rem 0.15rem;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cookie-settings {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0 0 1.15rem;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
+}
+
+.cookie-toggle {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.cookie-toggle-text label {
+  font-weight: 700;
+}
+
+.cookie-toggle-text p {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.cookie-always {
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.cookie-switch {
+  appearance: none;
+  position: relative;
+  width: 2.7rem;
+  height: 1.55rem;
+  margin-top: 0.15rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #c5c7d4;
+  flex-shrink: 0;
+}
+
+.cookie-switch[aria-checked="true"] {
+  background: var(--blue-dark);
+}
+
+.cookie-switch:disabled {
+  background: var(--blue);
+  cursor: default;
+  opacity: 0.85;
+}
+
+.cookie-switch-knob {
+  position: absolute;
+  top: 0.18rem;
+  left: 0.18rem;
+  width: 1.18rem;
+  height: 1.18rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(43, 46, 74, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.cookie-switch[aria-checked="true"] .cookie-switch-knob {
+  transform: translateX(1.15rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-switch-knob {
+    transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cookie-banner {
+    padding: 0.7rem 0.7rem calc(0.7rem + env(safe-area-inset-bottom));
+  }
+
+  .cookie-banner-card {
+    padding: 1.05rem 1.05rem 1.1rem;
+    border-radius: 18px 18px 22px 18px;
+  }
+
+  .cookie-btn {
+    min-width: calc(50% - 0.4rem);
+    flex: 1 1 calc(50% - 0.4rem);
+  }
+
+  .cookie-btn-settings {
+    margin-left: 0;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .cookie-banner-card {
+    background: #f8f6f3;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cookie-banner-card {
+    background: #f8f6f3;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+.cookie-policy-open {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--blue-dark);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

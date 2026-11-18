@@ -1,0 +1,65 @@
+/* Genanvendelig indholdsbredde */
+.content-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--blue);
+  margin-top: 0.9rem;
+}
+
+.section-subtitle {
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  margin: 1rem 0 0;
+}
+
+/* Redigerbare tekster med afsnit og "## Overskrift ##" (se texts/RichText.tsx).
+   :where() giver 0 specificitet, så sektionernes egne regler vinder. */
+:where(.rich-text) > p {
+  margin: 0 0 0.85em;
+}
+
+:where(.rich-text) > :last-child {
+  margin-bottom: 0;
+}
+
+:where(.rich-text) > .rich-heading {
+  margin: 1.2em 0 0.4em;
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+:where(.rich-text) > .rich-heading:first-child {
+  margin-top: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .content-container {
+    padding: 0 1rem;
+  }
+}

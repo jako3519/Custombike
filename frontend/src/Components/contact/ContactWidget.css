@@ -1,0 +1,205 @@
+.contact-widget {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px) + var(--cookie-banner-height, 0px));
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.55rem;
+  transition: bottom 0.28s ease;
+}
+
+.contact-bubble {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 0;
+  background: var(--blue);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 22px rgba(83, 137, 189, 0.38), 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.contact-bubble:hover {
+  background: var(--blue-dark);
+  transform: translateY(-1px) scale(1.04);
+}
+
+.contact-bubble:focus-visible,
+.contact-close:focus-visible,
+.contact-quick-btn:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.contact-popup {
+  position: relative;
+  width: 26rem;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100dvh - 6.25rem - var(--cookie-banner-height, 0px));
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: var(--ink);
+  background: rgba(248, 246, 243, 0.9);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 18px 40px rgba(43, 46, 74, 0.22);
+  transform-origin: 85% 100%;
+  animation: contact-pop 0.22s ease-out;
+}
+
+.contact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  padding: 0.5rem 0.45rem 0.5rem 0.8rem;
+  border-bottom: 1px solid rgba(43, 46, 74, 0.08);
+}
+
+.contact-title {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.contact-quick {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.2rem;
+}
+
+.contact-quick-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.contact-quick-btn {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--blue-dark);
+  background: var(--blue-soft);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.contact-quick-btn:hover {
+  background: rgba(109, 161, 211, 0.28);
+  color: var(--blue-dark);
+}
+
+.contact-quick-btn.is-missing {
+  color: var(--ink-soft);
+  background: rgba(43, 46, 74, 0.06);
+}
+
+.contact-close {
+  appearance: none;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 0;
+  color: var(--ink-soft);
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+}
+
+.contact-close:hover {
+  background: rgba(43, 46, 74, 0.08);
+  color: var(--ink);
+}
+
+.contact-widget-form {
+  padding: 0.45rem 0.8rem 0.7rem;
+}
+
+@keyframes contact-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-widget {
+    right: 0.9rem;
+    bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px) + var(--cookie-banner-height, 0px));
+  }
+
+  .contact-bubble {
+    width: 50px;
+    height: 50px;
+  }
+
+  .contact-widget.is-open {
+    inset: 0;
+    right: 0;
+    bottom: 0;
+    padding: calc(0.5rem + env(safe-area-inset-top, 0px)) 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px) + var(--cookie-banner-height, 0px));
+    align-items: stretch;
+    justify-content: flex-end;
+    z-index: 240;
+  }
+
+  .contact-widget.is-open .contact-popup {
+    width: auto;
+    max-width: none;
+    max-height: calc(100dvh - 1rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--cookie-banner-height, 0px));
+    flex: 0 1 auto;
+    border-radius: 18px;
+  }
+
+  .contact-widget.is-open .contact-bubble {
+    display: none;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .contact-popup {
+    background: rgba(248, 246, 243, 0.96);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .contact-popup {
+    background: rgb(248, 246, 243);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-widget,
+  .contact-bubble,
+  .contact-quick-btn,
+  .contact-popup {
+    animation: none;
+    transition: none;
+  }
+
+  .contact-bubble:hover {
+    transform: none;
+  }
+}

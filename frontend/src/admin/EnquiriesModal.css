@@ -1,0 +1,110 @@
+.enquiries-error {
+  margin: 0 0 1rem;
+  color: #8b1d2c;
+  font-weight: 600;
+}
+
+.enquiries-empty {
+  margin: 0;
+  color: var(--ink-soft, #5b5d70);
+}
+
+.enquiries-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.enquiries-list > li {
+  border: 1px solid #e4e6ee;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  background: #fff;
+}
+
+.enquiries-list > li.handled {
+  opacity: 0.72;
+  background: #f6f6f8;
+}
+
+.enquiries-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.enquiries-head strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.enquiries-meta {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft, #5b5d70);
+}
+
+.enquiries-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.enquiries-actions button {
+  appearance: none;
+  border: 1px solid #d8dbe6;
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.enquiries-actions button.danger {
+  color: #8b1d2c;
+  border-color: #ead0d4;
+}
+
+.enquiries-contact,
+.enquiries-message {
+  margin: 0.7rem 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.enquiries-contact {
+  white-space: normal;
+  font-size: 0.95rem;
+}
+
+.enquiries-files {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.enquiries-files button {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--blue-dark, #2a5f8f);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .enquiries-head {
+    flex-direction: column;
+  }
+}

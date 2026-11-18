@@ -1,0 +1,16 @@
+@Backend_HostAddress = http://localhost:5248
+
+# Login sker i browseren: åbn {{Backend_HostAddress}}/api/auth/login
+# Redigering foregår direkte på hjemmesiden, når du er logget ind som admin.
+
+### Hent alle tekster (viser hvilke id'er der findes)
+GET {{Backend_HostAddress}}/api/texts
+Accept: application/json
+
+### Hent billeder i galleriet
+GET {{Backend_HostAddress}}/api/gallery
+Accept: application/json
+
+### Hvem er logget ind?
+GET {{Backend_HostAddress}}/api/auth/me
+Accept: application/json
