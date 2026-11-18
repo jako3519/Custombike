@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--site-verification-->
+
+    <!-- Google-samtykke (Consent Mode v2): standard er afvist, indtil brugeren vælger. Skal ligge før Tag Manager. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        analytics_storage: "denied",
+        functionality_storage: "granted",
+        security_storage: "granted",
+        wait_for_update: 500
+      });
+      gtag("set", "ads_data_redaction", true);
+      try {
+        var raw = localStorage.getItem("custombike.consent");
+        if (raw) {
+          var c = JSON.parse(raw);
+          var maxAge = 365 * 24 * 60 * 60 * 1000;
+          if (c && c.v === 1 && typeof c.ts === "number" && Date.now() - c.ts < maxAge) {
+            var marketing = c.marketing ? "granted" : "denied";
+            gtag("consent", "update", {
+              analytics_storage: c.analytics ? "granted" : "denied",
+              ad_storage: marketing,
+              ad_user_data: marketing,
+              ad_personalization: marketing
+            });
+          }
+        }
+      } catch (e) {}
+    </script>
+    <!--gtm-head-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Custombike – 3D-printede cykeldele til din cykel</title>
+    <meta name="description" content="Custombike ved It Service v/Jakob Lund printer cykeltilebehør i TPU, tilpasset den enkelte cykel. Se produkter og bestil ved at sende et billede af cyklen." />
+    <link rel="canonical" href="https://custombike.example/" />
+    <meta name="theme-color" content="#1c2830" />
+
+    <!-- Deling på Facebook, SMS m.m. (Open Graph) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="da_DK" />
+    <meta property="og:site_name" content="Custombike" />
+    <meta property="og:title" content="Custombike – 3D-printede cykeldele til din cykel" />
+    <meta property="og:description" content="Custombike ved It Service v/Jakob Lund printer cykeltilebehør i TPU, tilpasset den enkelte cykel. Se produkter og bestil ved at sende et billede af cyklen." />
+    <meta property="og:url" content="https://custombike.example/" />
+    <meta property="og:image" content="https://custombike.example/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Custombike – cykeltilebehør printet til din cykel" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Custombike – 3D-printede cykeldele til din cykel" />
+    <meta name="twitter:description" content="Custombike ved It Service v/Jakob Lund printer cykeltilebehør i TPU, tilpasset den enkelte cykel. Se produkter og bestil ved at sende et billede af cyklen." />
+    <meta name="twitter:image" content="https://custombike.example/og-image.png" />
+    <meta name="twitter:image:alt" content="Custombike – cykeltilebehør printet til din cykel" />
+    <!-- Strukturerede data til Google (JSON-LD): sættes ind af serveren ud fra teksterne, se Backend/Prerender -->
+    <!--app-jsonld-->
+  </head>
+  <body>
+    <!--gtm-body-->
+    <div id="root"><!--app-html--></div>
+    <!--app-data-->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

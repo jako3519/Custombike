@@ -1,0 +1,178 @@
+/* --- Footer (flyttet fra Homepage.css, så den også kan bruges på ydelsernes sider) --- */
+.site-footer {
+  position: relative;
+  /* Mørkt glas: halvgennemsigtig blå-grå med sløret baggrund, så billedet anes igennem */
+  --footer-glass: rgba(30, 32, 52, 0.6);
+  background: var(--footer-glass);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 -16px 50px rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.82);
+  padding: 2.25rem 0 1.25rem;
+  font-size: 0.95rem;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.footer-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Kort tekst om firmaet over virksomhedsoplysningerne */
+.footer-intro {
+  max-width: 36rem;
+  margin: 0 0 1.25rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+}
+
+.footer-intro .rich-heading {
+  color: #fff;
+  font-size: 1.1em;
+}
+
+/* Virksomhedsoplysninger i bunden: en oplysning pr. linje */
+.footer-company {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.footer-company .footer-name {
+  margin-bottom: 0.35rem;
+}
+
+.footer-company a,
+.footer-credit a {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  text-underline-offset: 3px;
+}
+
+.footer-company a:hover,
+.footer-credit a:hover {
+  text-decoration-color: #fff;
+}
+
+/* Nederste linje: hvem der har lavet siden til venstre, © helt til højre.
+   .site-footer foran, så .content-container's "margin: 0 auto" ikke fjerner afstanden ovenover. */
+.site-footer .footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-credit {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.footer-credit a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.15rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.footer-legal a,
+.footer-cookie-settings {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  text-underline-offset: 3px;
+}
+
+.footer-legal a:hover,
+.footer-cookie-settings:hover {
+  text-decoration-color: #fff;
+}
+
+.footer-cookie-settings {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: #fff;
+  cursor: pointer;
+}
+
+.footer-copy {
+  margin-left: auto;
+  text-align: right;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Plads til den runde kontakt-knap nederst til højre, når skærmen ikke er bred */
+@media (max-width: 1260px) {
+  .site-footer .footer-bottom {
+    padding-right: 5.5rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-footer .footer-inner {
+    padding-right: 5rem;
+  }
+
+  .site-footer .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-copy {
+    margin-left: 0;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-footer {
+    --footer-glass: rgba(30, 32, 52, 0.66);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    backdrop-filter: blur(14px) saturate(130%);
+    border-radius: 22px 22px 0 0;
+  }
+}
+
+/* Browsere uden glas-effekt: næsten massiv mørk footer */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .site-footer {
+    --footer-glass: rgba(30, 32, 52, 0.96);
+  }
+}
+
+/* Brugere der har slået gennemsigtighed fra i styresystemet */
+@media (prefers-reduced-transparency: reduce) {
+  .site-footer {
+    --footer-glass: var(--ink);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

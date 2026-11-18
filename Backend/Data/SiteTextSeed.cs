@@ -1,0 +1,71 @@
+using Backend.Models;
+
+namespace Backend.Data
+{
+    // Standardtekster der lægges i databasen første gang. Ændres bagefter via POST /api/texts.
+    public static class SiteTextSeed
+    {
+        public static readonly SiteText[] Texts =
+        {
+            new() { Id = "company.name", Value = "Custombike", Description = "Firmanavn i navbar og footer" },
+            new() { Id = "nav.about", Value = "Om os", Description = "Menupunkt til Om os" },
+            new() { Id = "nav.gallery", Value = "Billeder", Description = "Menupunkt til Billeder" },
+            new() { Id = "nav.contact", Value = "Kontakt", Description = "Kontakt-knap i navbar" },
+            new() { Id = "hero.title", Value = "Printet til din cykel", Description = "Stor overskrift på forsiden" },
+            new() { Id = "hero.subtitle", Value = "3D-printede holdere og dele i TPU, tilpasset cykelmodellen.", Description = "Undertekst på forsiden" },
+            new() { Id = "hero.image", Value = "", Description = "Forsidebillede – vælges i billed-redigeringen (tom = første billede i galleriet)" },
+            new() { Id = "about.title", Value = "Om os", Description = "Overskrift i Om os" },
+            new() { Id = "about.body", Value = "PLACEHOLDER – Jakob skal skrive denne tekst om.\n\nCustombike er It Service v/Jakob Lund (CVR 42637688). Vi printer cykeltilebehør i 3D, ofte i TPU, og tilpasser det til den enkelte cykel – for eksempel en holder til Garmin Varia, vinklet efter sadelpinden.", Description = "Brødtekst i Om os (tom linje = nyt afsnit)" },
+            new() { Id = "gallery.title", Value = "Billeder", Description = "Overskrift i Billeder" },
+            new() { Id = "gallery.subtitle", Value = "Eksempler på dele, der er printet til en bestemt cykel.", Description = "Undertekst i Billeder" },
+            new() { Id = "gallery.empty", Value = "Der er ingen billeder endnu.", Description = "Vises når galleriet er tomt" },
+            new() { Id = "contact.title", Value = "Kontakt", Description = "Overskrift i kontakt-boksen" },
+            new() { Id = "contact.email", Value = "jako3519@gmail.com", Description = "E-mail i kontakt-boksen" },
+            new() { Id = "contact.phone", Value = "+45 40 26 26 64", Description = "Telefonnummer i kontakt-boksen" },
+            new() { Id = "contact.facebookLabel", Value = "Facebook", Description = "Tekst på Facebook-linket" },
+            new() { Id = "contact.facebookUrl", Value = "", Description = "Adresse på Facebook-siden (tom = linket vises ikke)" },
+            new() { Id = "footer.text", Value = "Alle rettigheder forbeholdes", Description = "Tekst i bunden af siden" },
+            new() { Id = "company.legalName", Value = "It Service v/Jakob Lund", Description = "Juridisk navn/virksomhedsform i bunden af siden" },
+            new() { Id = "company.address", Value = "", Description = "Adresse i bunden af siden (gade, postnr. by). Tom indtil den er udfyldt." },
+            new() { Id = "company.cvr", Value = "42637688", Description = "CVR-nummer i bunden af siden" },
+            new() { Id = "company.footerText", Value = "Custombike printer cykeltilebehør til den enkelte cykel. PLACEHOLDER – Jakob skal skrive denne tekst om.", Description = "Kort tekst om firmaet i bunden af siden" },
+            new() { Id = "nav.services", Value = "Produkter", Description = "Menupunkt til Produkter" },
+            new() { Id = "services.title", Value = "Produkter", Description = "Overskrift i Produkter" },
+            new() { Id = "services.subtitle", Value = "Hver kategori er en type del. Vælg den, og bestil ved at sende et billede af cyklen.", Description = "Undertekst i Produkter" },
+            new() { Id = "services.1.title", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.1.text", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.2.title", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.2.text", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.3.title", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.3.text", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.4.title", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.4.text", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.5.title", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.5.text", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.6.title", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.6.text", Value = "", Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel" },
+            new() { Id = "services.note", Value = "Der er ingen kurv eller betaling endnu. En bestilling er en besked med billede, så delen kan tilpasses.", Description = "Linje under produkterne" },
+            new() { Id = "services.readMore", Value = "Læs mere", Description = "Link på produktkortene til produktets egen side" },
+            new() { Id = "service.back", Value = "Alle produkter", Description = "Produktside – link tilbage til alle produkter" },
+            new() { Id = "service.mediaTitle", Value = "Billeder og video", Description = "Produktside – overskrift over billeder og videoer" },
+            new() { Id = "service.ctaTitle", Value = "Bestil til din cykel", Description = "Produktside – overskrift i bestillingsboksen" },
+            new() { Id = "service.ctaText", Value = "Send et billede af cyklen fra siden, så vinklen kan måles, og delen kan printes til netop din cykel.", Description = "Produktside – tekst i bestillingsboksen" },
+            new() { Id = "service.ctaButton", Value = "Bestil – send billede af din cykel", Description = "Produktside – knap der åbner bestillingsformularen" },
+            new() { Id = "service.otherTitle", Value = "Andre produkter", Description = "Produktside – overskrift over de andre produkter" },
+            new() { Id = "notFound.title", Value = "Siden findes ikke", Description = "Side der ikke findes – overskrift" },
+            new() { Id = "notFound.text", Value = "Siden er måske flyttet eller slettet. Se alle produkter på forsiden.", Description = "Side der ikke findes – tekst" },
+            new() { Id = "notFound.back", Value = "Til forsiden", Description = "Side der ikke findes – knap til forsiden" },
+            new() { Id = "contact.formTitle", Value = "Skriv til os", Description = "Overskrift over kontaktformularen" },
+            new() { Id = "contact.formIntro", Value = "Fortæl kort, hvad du har brug for, så vender vi tilbage.", Description = "Kort tekst over kontaktformularen" },
+            new() { Id = "contact.orderIntro", Value = "Bestil ved at sende mindst ét billede af cyklen fra siden, så vinklen kan måles.", Description = "Tekst over formularen, når den åbnes fra et produkt" },
+            new() { Id = "contact.photoHelp", Value = "Fotografer cyklen fra siden, i omtrent samme højde som sadelpinden, så hele pinden er med. Så kan vinklen måles. Jpg, png, webp eller heic – højst 5 billeder, 15 MB pr. billede.", Description = "Hjælpetekst når et billede af cyklen er påkrævet" },
+            new() { Id = "contact.gdpr", Value = "Dine oplysninger bruges kun til at besvare din henvendelse. Vi gemmer dem i op til 12 måneder.", Description = "Tekst under kontaktformularen om brug af oplysninger" },
+            new() { Id = "contact.submit", Value = "Send besked", Description = "Knap på kontaktformularen, når der ikke er valgt et produkt" },
+            new() { Id = "contact.orderSubmit", Value = "Bestil – send billede af din cykel", Description = "Knap på formularen, når et produkt er valgt" },
+            new() { Id = "contact.thanksTitle", Value = "Tak for din henvendelse", Description = "Overskrift på tak-siden efter en henvendelse" },
+            new() { Id = "contact.thanksText", Value = "Vi har modtaget din besked og vender tilbage hurtigst muligt.", Description = "Tekst på tak-siden efter en henvendelse" },
+            new() { Id = "cookie.title", Value = "Cookiepolitik", Description = "Overskrift på siden Cookiepolitik" },
+            new() { Id = "cookie.body", Value = "Custombike ved It Service v/Jakob Lund (CVR 42637688) er dataansvarlig for behandlingen af personoplysninger på denne hjemmeside.\n\nVi bruger cookies og lignende teknikker. Nødvendige funktioner virker altid. Cookies til statistik og marketing (Google) sættes kun, hvis du giver samtykke, og kun hvis Google Tag Manager er sat op.\n\n## Nødvendige ##\n\nDisse er nødvendige for, at siden virker, og kræver ikke samtykke.\n\nDit valg om cookies huskes i din browser (localStorage, navn custombike.consent) i 12 måneder, så vi ikke spørger dig igen ved hvert besøg.\n\nHvis du er logget ind som administrator, bruges en login-cookie (custombike.auth) til at holde dig logget ind.\n\n## Statistik og marketing (Google) ##\n\nKun med dit samtykke, og kun når et container-id er konfigureret, indlæser vi Google Tag Manager. Den kan starte tags fra Google Analytics (statistik) og Google Ads (marketing og annoncemåling). Uden container-id indlæses Google ikke.\n\nDe typiske cookies, Google kan sætte, er blandt andet:\n\nStatistik: _ga og _ga_* (typisk op til 13–24 måneder) samt _gid (24 timer). De bruges til at skelne besøg og forstå, hvordan siden bruges.\n\nMarketing: _gcl_au, _gcl_aw og lignende (typisk op til 90 dage). De bruges til at måle annoncer og eventuelt vise mere relevante annoncer.\n\nDen præcise liste afhænger af de tags, der er sat op i Google Tag Manager. Data sendes til Google Ireland Limited og kan blive videregivet til Google LLC i USA. Google behandler oplysningerne efter deres privatlivspolitik (policies.google.com/privacy).\n\n## Vores egen statistik ##\n\nSiden har også en indbygget, cookiefri besøgsstatistik, som ikke bruger cookies og ikke kræver samtykke. Den kører uafhængigt af Google.\n\n## Sådan trækker du samtykket tilbage ##\n\nDu kan altid ændre eller trække dit samtykke tilbage via linket \"Cookie-indstillinger\" i bunden af siden. Valget huskes i 12 måneder, eller indtil du ændrer det. Du kan også slette gemte data i din browser.\n\nHar du spørgsmål til vores brug af cookies, kan du kontakte os på de kontaktoplysninger, der står i bunden af siden.", Description = "Brødtekst på siden Cookiepolitik (tom linje = nyt afsnit, ## Overskrift ##)" }
+        };
+    }
+}

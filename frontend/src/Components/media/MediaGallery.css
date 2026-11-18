@@ -1,0 +1,145 @@
+/* Ensartet gitter: alle felter (billeder, videoer, YouTube) har samme størrelse og beskæres til 4:3 */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.media-cell {
+  min-width: 0;
+}
+
+.media-item {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #1d1f33;
+  cursor: pointer;
+}
+
+.media-image {
+  cursor: zoom-in;
+}
+
+.media-item img,
+.media-item video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: transform 0.35s ease, opacity 0.2s ease;
+}
+
+/* Videoer og YouTube: lidt mørkere, med afspil-knap i midten */
+.media-video video,
+.media-youtube img {
+  opacity: 0.85;
+}
+
+.media-item:hover img,
+.media-item:hover video {
+  transform: scale(1.04);
+  opacity: 1;
+}
+
+/* YouTubes stillbillede (hqdefault, 4:3) har sorte bjælker over og under selve 16:9-billedet: skær dem væk */
+.media-youtube img {
+  transform: scale(1.34);
+}
+
+.media-item.media-youtube:hover img {
+  transform: scale(1.39);
+}
+
+.media-item:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.media-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: rgba(20, 22, 38, 0.78);
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.media-item:hover .media-play {
+  background: var(--blue-dark);
+  transform: scale(1.06);
+}
+
+/* Det store vindue: hele videoen (ikke beskåret) */
+.lightbox-video {
+  max-width: 100%;
+  max-height: calc(100vh - 6rem);
+  border-radius: 6px;
+  background: #000;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-frame {
+  width: min(100%, calc((100vh - 6rem) * 16 / 9), 1200px);
+  aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Forsidens galleri: som før, så mange 260 px-felter som der er plads til */
+.media-grid-wide {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  margin-top: 2.5rem;
+}
+
+@media (max-width: 860px) {
+  .media-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .media-grid {
+    gap: 0.6rem;
+  }
+
+  .media-item {
+    border-radius: 12px;
+  }
+
+  .media-play {
+    width: 48px;
+    height: 48px;
+    margin: -24px 0 0 -24px;
+  }
+
+  .media-play svg {
+    width: 22px;
+    height: 22px;
+  }
+}
