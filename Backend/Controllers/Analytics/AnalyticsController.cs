@@ -18,21 +18,36 @@ public partial class AnalyticsController : ControllerBase
 {
     private static readonly HashSet<string> SimpleTargets = new(StringComparer.Ordinal) { "phone", "email", "contact", "facebook" };
 
-    // Egne domaener taeller ikke som henvisning (det er bare intern navigation)
-    private static readonly HashSet<string> OwnHosts = new(StringComparer.OrdinalIgnoreCase)
+    // Egne domaener taeller ikke som henvisning (det er bare intern navigation).
+    // Carltons domæne er bevidst ikke med. Sæt Site:Url, Site:CanonicalHost og Site:RedirectHosts.
+    private readonly HashSet<string> _ownHosts = new(StringComparer.OrdinalIgnoreCase)
     {
-        "carltonpaataget.dk", "www.carltonpaataget.dk", "carlton-paa-taget.fly.dev", "localhost", "127.0.0.1",
+        "localhost", "127.0.0.1",
     };
 
     private readonly DataContext _db;
     private readonly VisitorHasher _hasher;
     private readonly GeoLookup _geo;
 
-    public AnalyticsController(DataContext db, VisitorHasher hasher, GeoLookup geo)
+    public AnalyticsController(DataContext db, VisitorHasher hasher, GeoLookup geo, IConfiguration config)
     {
         _db = db;
         _hasher = hasher;
         _geo = geo;
+        AddOwnHost(config["Site:CanonicalHost"]);
+        AddOwnHost(config["Site:Url"]);
+        foreach (var extra in (config["Site:RedirectHosts"] ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            AddOwnHost(extra);
+    }
+
+    private void AddOwnHost(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return;
+        var value = raw.Trim();
+        if (Uri.TryCreate(value.Contains("://") ? value : "https://" + value, UriKind.Absolute, out var uri) && uri.Host.Length > 0)
+            _ownHosts.Add(uri.Host);
+        else
+            _ownHosts.Add(value);
     }
 
     public sealed class EventDto
@@ -186,11 +201,11 @@ public partial class AnalyticsController : ControllerBase
         return path.Length > 200 ? path[..200] : path;
     }
 
-    private static string? ReferrerDomain(string? referrer, string requestHost)
+    private string? ReferrerDomain(string? referrer, string requestHost)
     {
         if (string.IsNullOrWhiteSpace(referrer) || !Uri.TryCreate(referrer.Trim(), UriKind.Absolute, out var uri)) return null;
         var host = uri.Host.ToLowerInvariant().TrimEnd('.');
-        if (host.Length == 0 || OwnHosts.Contains(host) || host.Equals(requestHost, StringComparison.OrdinalIgnoreCase)) return null;
+        if (host.Length == 0 || _ownHosts.Contains(host) || host.Equals(requestHost, StringComparison.OrdinalIgnoreCase)) return null;
         if (host.StartsWith("www.")) host = host[4..];
         return host.Length > 100 ? host[..100] : host;
     }

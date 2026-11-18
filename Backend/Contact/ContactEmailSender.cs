@@ -17,7 +17,7 @@ public sealed class ContactEmailSender(IConfiguration config, IWebHostEnvironmen
 {
     // Gmail afviser hele beskeden over 25 MB. Base64 øger størrelsen, så de rå filer holdes under 18 MB.
     public const long MaxRawAttachmentBytes = 18L * 1024 * 1024;
-    private const string FromName = "Henvendelse - Carlton på taget";
+    private const string FromName = "Henvendelse – Custombike";
 
     public async Task TrySendAsync(ContactRequest request, CancellationToken ct)
     {
@@ -87,7 +87,7 @@ public sealed class ContactEmailSender(IConfiguration config, IWebHostEnvironmen
     private (string Html, string Text, bool AttachFiles) BuildBody(ContactRequest request, string service)
     {
         var e = HtmlEncoder.Default;
-        var site = (First(config["Frontend:Url"], config["Site:Url"]) ?? "https://carltonpaataget.dk").TrimEnd('/');
+        var site = (First(config["Frontend:Url"], config["Site:Url"]) ?? "").TrimEnd('/');
         var adminUrl = site + "/admin";
         var telHref = TelHref(request.Phone);
         var rawSize = request.Attachments.Sum(a => a.Size);

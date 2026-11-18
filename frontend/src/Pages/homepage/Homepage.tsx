@@ -18,7 +18,7 @@ import logo from "../../assets/logo.png";
 // uden for linket (en knap må ikke ligge inde i et link), så et klik på den ikke åbner ydelsessiden.
 function ServiceCard({ service, readMore }: { service: Service; readMore: string }) {
   const { editService } = useAdmin();
-  const href = `/ydelser/${service.slug}`;
+  const href = `/produkter/${service.slug}`;
   const titleId = `service-title-${service.id}`;
   const title = (
     <h3 className="service-title" id={titleId}>
@@ -61,7 +61,7 @@ function ServiceCard({ service, readMore }: { service: Service; readMore: string
           </span>
         </div>
       </a>
-      <EditButton onClick={() => editService(service.id)} label={`Rediger ydelse: ${service.title}`} className="service-card-edit" />
+      <EditButton onClick={() => editService(service.id)} label={`Rediger produkt: ${service.title}`} className="service-card-edit" />
     </article>
   );
 }
@@ -113,7 +113,7 @@ function HomePage() {
             <RichText text={heroSubtitle} />
             <EditButton ids={["hero.subtitle"]} label="Rediger undertekst" />
           </div>
-          <a href="#ydelser" className="hero-scroll" aria-label="Scroll ned">
+          <a href="#produkter" className="hero-scroll" aria-label="Scroll ned">
             <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
               <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -123,7 +123,7 @@ function HomePage() {
 
       {/* SEKTION 2: Indholdet, der scroller op over hero */}
       <div className="scrollable-content">
-        <section id="ydelser" className="services-section glass-sheet">
+        <section id="produkter" className="services-section glass-sheet">
           <div className="content-container">
             <div className="services-head">
               <h2 className="section-title">
@@ -139,7 +139,7 @@ function HomePage() {
                     <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
                   </svg>
                 </span>
-                Rediger ydelser – tilføj, slet og rækkefølge
+                Rediger produkter – tilføj, slet og rækkefølge
               </button>
             )}
             <div className="services-grid">

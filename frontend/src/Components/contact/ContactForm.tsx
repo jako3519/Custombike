@@ -32,8 +32,11 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
   const { services } = useServices();
   const title = useText("contact.formTitle");
   const intro = useText("contact.formIntro");
+  const orderIntro = useText("contact.orderIntro");
+  const photoHelp = useText("contact.photoHelp");
   const gdpr = useText("contact.gdpr");
   const submitLabel = useText("contact.submit");
+  const orderSubmit = useText("contact.orderSubmit");
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -79,7 +82,8 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
     setError("");
     if (name.trim().length < 2) return setError("Skriv dit navn.");
     if (phone.trim().replace(/\D/g, "").length < 8) return setError("Skriv et telefonnummer, vi kan ringe til.");
-    if (!service) return setError("Vælg en ydelse, eller vælg Andet.");
+    if (!service) return setError("Vælg et produkt, eller vælg Andet.");
+    if (service !== "andet" && files.length < 1) return setError("Vedhæft mindst ét billede af cyklen fra siden.");
     if (!message.trim()) return setError("Skriv en kort besked om opgaven.");
     setSending(true);
     try {
@@ -100,9 +104,13 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
     }
   };
 
+  const ordering = service !== "" && service !== "andet";
+  const shownIntro = ordering ? orderIntro : intro;
+  const shownSubmit = ordering ? orderSubmit : submitLabel;
+
   const edit = (
     <EditButton
-      ids={["contact.formTitle", "contact.formIntro", "contact.gdpr", "contact.submit"]}
+      ids={["contact.formTitle", "contact.formIntro", "contact.orderIntro", "contact.photoHelp", "contact.gdpr", "contact.submit", "contact.orderSubmit"]}
       label="Rediger kontaktformularen"
     />
   );
@@ -116,16 +124,16 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
       <div className={compact ? "contact-form-wrap" : "content-container"}>
         {compact ? (
           <p className="contact-form-intro" id={titleId}>
-            {intro}
+            {shownIntro}
             {edit}
           </p>
         ) : (
           <>
             <h2 className="section-title" id={titleId}>
-              {title}
+              {ordering ? orderSubmit : title}
               {edit}
             </h2>
-            {intro && <p className="section-subtitle contact-form-intro">{intro}</p>}
+            {shownIntro && <p className="section-subtitle contact-form-intro">{shownIntro}</p>}
           </>
         )}
 
@@ -159,10 +167,10 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
             <input type="email" name="email" autoComplete="email" maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
           <label className="contact-field">
-            <span>Ydelse</span>
+            <span>Produkt</span>
             <select name="service" required value={service} onChange={(e) => setService(e.target.value)}>
               <option value="" disabled>
-                Vælg en ydelse
+                Vælg et produkt
               </option>
               {services.map((s) => (
                 <option key={s.id} value={s.slug}>
@@ -178,6 +186,11 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
           </label>
 
           <div className={`contact-field contact-field-full${compact ? " contact-files-compact" : ""}`}>
+            {ordering ? (
+              <p className="contact-files-help">{photoHelp}</p>
+            ) : compact ? null : (
+              <p className="contact-files-help">Billeder er valgfrie. Jpg, png, webp eller heic – højst 15 MB pr. billede.</p>
+            )}
             {compact ? (
               <div className="contact-files-row">
                 <input
@@ -192,14 +205,15 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
                   }}
                 />
                 <label htmlFor={filesId} className="contact-files-btn">
-                  Vedhæft billeder
+                  {ordering ? "Vedhæft billede af cyklen" : "Vedhæft billeder"}
                 </label>
                 <span className="contact-files-count">{files.length}/{MAX_FILES}</span>
               </div>
             ) : (
               <>
-                <span className="contact-files-label">Billeder (valgfri, højst {MAX_FILES})</span>
-                <p className="contact-files-help">Jpg, png, webp eller heic – højst 15 MB pr. billede.</p>
+                <span className="contact-files-label">
+                  {ordering ? `Billede af cyklen (påkrævet, højst ${MAX_FILES})` : `Billeder (valgfri, højst ${MAX_FILES})`}
+                </span>
                 <input
                   type="file"
                   accept={ACCEPT}
@@ -232,7 +246,7 @@ function ContactForm({ preselectedSlug, variant = "page" }: ContactFormProps) {
           )}
 
           <button type="submit" className="contact-submit" disabled={sending}>
-            {sending ? "Sender…" : submitLabel}
+            {sending ? "Sender…" : shownSubmit}
           </button>
 
           <p className="contact-gdpr">

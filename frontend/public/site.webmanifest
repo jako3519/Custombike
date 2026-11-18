@@ -1,14 +1,14 @@
 {
-  "name": "Carlton på Taget",
-  "short_name": "Carlton på Taget",
-  "description": "Tømrer i Ribe og omegn",
+  "name": "Custombike",
+  "short_name": "Custombike",
+  "description": "3D-printede cykeldele til din cykel",
   "lang": "da",
   "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "theme_color": "#2b2e4a",
-  "background_color": "#f8f6f3",
+  "theme_color": "#1c2830",
+  "background_color": "#f4f6f5",
   "icons": [
     {
       "src": "/icon-192.png",

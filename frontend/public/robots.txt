@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /admin
 
-Sitemap: https://carltonpaataget.dk/sitemap.xml
+Sitemap: /sitemap.xml

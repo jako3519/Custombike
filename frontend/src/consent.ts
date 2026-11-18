@@ -1,9 +1,9 @@
 // Samtykke til Google-cookies (statistik og marketing). Vores egen cookiefri
 // besøgsstatistik er uafhængig af dette og røres ikke.
-export const CONSENT_STORAGE_KEY = "carlton.consent";
+export const CONSENT_STORAGE_KEY = "custombike.consent";
 export const CONSENT_VERSION = 1;
 export const CONSENT_MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000;
-export const CONSENT_OPEN_EVENT = "carlton:consent-open";
+export const CONSENT_OPEN_EVENT = "custombike:consent-open";
 
 export type ConsentChoice = {
   analytics: boolean;

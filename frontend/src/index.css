@@ -1,11 +1,11 @@
 :root {
-  --blue: #6da1d3;
-  --blue-dark: #5389bd;
-  --blue-soft: #e8f1fa;
-  --ink: #2b2e4a;
-  --ink-soft: #5b5e78;
-  --cream: #f8f6f3;
-  --line: #eeeeee;
+  --blue: #2f6f6a;
+  --blue-dark: #245854;
+  --blue-soft: #e6f2f1;
+  --ink: #1c2830;
+  --ink-soft: #4d5c66;
+  --cream: #f4f6f5;
+  --line: #e6ecea;
 
   font-family: "Outfit", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.6;

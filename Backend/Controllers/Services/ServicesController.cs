@@ -98,7 +98,7 @@ public class ServicesController : ControllerBase
             var slug = Slug.From(dto.Slug);
             if (slug.Length == 0) return BadRequest("Adressen skal indeholde bogstaver eller tal.");
             if (slug != service.Slug && await _db.Services.AnyAsync(s => s.Slug == slug && s.Id != id, ct))
-                return BadRequest($"Adressen /ydelser/{slug} bruges allerede af en anden ydelse.");
+                return BadRequest($"Adressen /produkter/{slug} bruges allerede af et andet produkt.");
             service.Slug = slug;
         }
 
@@ -134,7 +134,7 @@ public class ServicesController : ControllerBase
     {
         var services = await _db.Services.ToListAsync(ct);
         if (!IsPermutation(dto.Ids, services.Select(s => s.Id)))
-            return BadRequest("Listen skal indeholde alle ydelsers id'er præcis én gang.");
+            return BadRequest("Listen skal indeholde alle produkters id'er præcis én gang.");
 
         var byId = services.ToDictionary(s => s.Id);
         for (var i = 0; i < dto.Ids.Count; i++) byId[dto.Ids[i]].SortOrder = i;
@@ -199,7 +199,7 @@ public class ServicesController : ControllerBase
         if (service == null) return NotFound();
         if (files == null || files.Count == 0) return BadRequest("Ingen filer modtaget.");
         if (service.Media.Count + files.Count > MaxMediaPerService)
-            return BadRequest($"En ydelse kan højst have {MaxMediaPerService} billeder og videoer.");
+            return BadRequest($"Et produkt kan højst have {MaxMediaPerService} billeder og videoer.");
 
         // Valider alle filer, før noget gemmes
         var kinds = new List<string>();
@@ -247,7 +247,7 @@ public class ServicesController : ControllerBase
         var service = await _db.Services.Include(s => s.Media).FirstOrDefaultAsync(s => s.Id == id, ct);
         if (service == null) return NotFound();
         if (service.Media.Count >= MaxMediaPerService)
-            return BadRequest($"En ydelse kan højst have {MaxMediaPerService} billeder og videoer.");
+            return BadRequest($"Et produkt kan højst have {MaxMediaPerService} billeder og videoer.");
 
         var videoId = MediaFiles.ParseYouTubeId(dto.Url);
         if (videoId == null) return BadRequest("Det ligner ikke et YouTube-link. Kopiér adressen på videoen fra YouTube (fx https://youtu.be/...).");
@@ -295,7 +295,7 @@ public class ServicesController : ControllerBase
     private static string? Validate(ServiceInputDto dto)
     {
         var title = (dto.Title ?? "").Trim();
-        if (title.Length == 0) return "Ydelsen skal have et navn.";
+        if (title.Length == 0) return "Produktet skal have et navn.";
         if (title.Length > MaxTitle) return $"Navnet må højst være {MaxTitle} tegn.";
         if ((dto.ShortText ?? "").Trim().Length > MaxShortText) return $"Teksten på kortet må højst være {MaxShortText} tegn.";
         if ((dto.Body ?? "").Trim().Length > MaxBody) return $"Teksten på siden må højst være {MaxBody} tegn.";

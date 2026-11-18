@@ -78,7 +78,7 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
   const save = (e: FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
-      setError("Ydelsen skal have et navn.");
+      setError("Produktet skal have et navn.");
       return;
     }
     const input = {
@@ -102,8 +102,8 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
       const updated = res.data.find((s) => s.id === id);
       setMessage("Gemt.");
       // Står man på ydelsens side, og er adressen ændret: gå til den nye adresse
-      if (updated && updated.slug !== oldSlug && window.location.pathname === `/ydelser/${oldSlug}`) {
-        window.location.replace(`/ydelser/${updated.slug}`);
+      if (updated && updated.slug !== oldSlug && window.location.pathname === `/produkter/${oldSlug}`) {
+        window.location.replace(`/produkter/${updated.slug}`);
       }
     });
   };
@@ -175,8 +175,8 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
     void run(async () => {
       const res = await deleteService(existing.id);
       setServices(res.data);
-      if (window.location.pathname === `/ydelser/${existing.slug}`) {
-        window.location.assign("/#ydelser");
+      if (window.location.pathname === `/produkter/${existing.slug}`) {
+        window.location.assign("/#produkter");
         return;
       }
       onClose();
@@ -190,20 +190,20 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
   );
 
   return (
-    <Modal title={isNew ? "Ny ydelse" : `Rediger ydelse: ${existing?.title ?? ""}`} onClose={onClose} wide>
+    <Modal title={isNew ? "Nyt produkt" : `Rediger produkt: ${existing?.title ?? ""}`} onClose={onClose} wide>
       {!isNew && !existing ? (
-        <p className="admin-empty">Ydelsen findes ikke længere.</p>
+        <p className="admin-empty">Produktet findes ikke længere.</p>
       ) : (
         <form onSubmit={save} className="admin-form">
           <label className="admin-field">
-            <span className="admin-field-label">Navn på ydelsen</span>
-            <input type="text" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="Fx Tagarbejde" />
+            <span className="admin-field-label">Navn på produktet</span>
+            <input type="text" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="Fx Garmin Varia-holder" />
           </label>
 
           <label className="admin-field">
             <span className="admin-field-label">Adresse på siden</span>
             <span className="svc-slug">
-              <span className="svc-slug-prefix">carltonpaataget.dk/ydelser/</span>
+              <span className="svc-slug-prefix">/produkter/</span>
               <input
                 type="text"
                 value={slugTouched ? slug : shownSlug}
@@ -248,7 +248,7 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
           </label>
 
           <label className="admin-field">
-            <span className="admin-field-label">Tekst på ydelsens egen side</span>
+            <span className="admin-field-label">Tekst på produktets egen side</span>
             <textarea rows={12} value={body} maxLength={20000} onChange={(e) => setBody(e.target.value)} />
             {markupHint}
           </label>
@@ -261,19 +261,19 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
               {isNew ? "Annuller" : "Luk"}
             </button>
             <button type="submit" className="admin-btn" disabled={busy}>
-              {busy ? "Gemmer…" : isNew ? "Opret ydelse" : "Gem tekster"}
+              {busy ? "Gemmer…" : isNew ? "Opret produkt" : "Gem tekster"}
             </button>
           </div>
         </form>
       )}
 
-      {isNew && <p className="admin-hint">Når ydelsen er oprettet, kan du tilføje forsidebillede, billeder og video.</p>}
+      {isNew && <p className="admin-hint">Når produktet er oprettet, kan du tilføje forsidebillede, billeder og video.</p>}
 
       {existing && (
         <>
           <section className="svc-section">
             <h3 className="svc-section-title">Forsidebillede</h3>
-            <p className="admin-hint">Vises på kortet på forsiden (med navnet oven på) og øverst på ydelsens side. Uden billede vises ikonet.</p>
+            <p className="admin-hint">Vises på kortet på forsiden (med navnet oven på) og øverst på produktets side. Uden billede vises ikonet.</p>
             <div className="svc-cover">
               {existing.coverUrl ? (
                 <img src={assetUrl(existing.coverUrl)} alt="Forsidebillede" />
@@ -307,7 +307,7 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
           </section>
 
           <section className="svc-section" ref={mediaSection}>
-            <h3 className="svc-section-title">Billeder og video på ydelsens side</h3>
+            <h3 className="svc-section-title">Billeder og video på produktets side</h3>
 
             <MediaAdder busy={busy} progress={progress} onFiles={uploadMedia} onYouTube={addYouTube} onError={setError} />
             {error && <div className="admin-error">{error}</div>}
@@ -356,12 +356,12 @@ function ServiceEditModal({ id, focusMedia, onClose, onCreated }: ServiceEditMod
                   Nej
                 </button>
                 <button type="button" className="admin-btn svc-delete" onClick={removeService} disabled={busy}>
-                  Ja, slet ydelsen
+                  Ja, slet produktet
                 </button>
               </>
             ) : (
               <button type="button" className="admin-btn secondary svc-delete-link" onClick={() => setConfirmDelete("service")} disabled={busy}>
-                Slet ydelsen
+                Slet produktet
               </button>
             )}
           </section>

@@ -24,7 +24,7 @@ public static class ServiceData
     // Ikonsættet fra ydelseskortene (tegnes i frontend/src/services/icons.ts)
     public static readonly HashSet<string> Icons = new(StringComparer.Ordinal)
     {
-        "roof", "deck", "carport", "window", "interior", "facade"
+        "mount", "bike", "radar", "roof", "deck", "carport", "window", "interior", "facade"
     };
 
     public static async Task<List<ServiceDto>> ListAsync(DataContext db, CancellationToken ct)

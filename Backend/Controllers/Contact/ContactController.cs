@@ -190,12 +190,12 @@ public sealed partial class ContactController(DataContext db, IWebHostEnvironmen
         else if (service.Length is > 0 and <= 80)
         {
             var svc = await db.Services.AsNoTracking().FirstOrDefaultAsync(s => s.Slug == service, ct);
-            if (svc == null) return ("Vælg en ydelse, eller vælg Andet.", null, uploads);
+            if (svc == null) return ("Vælg et produkt, eller vælg Andet.", null, uploads);
             serviceTitle = svc.Title;
         }
         else
         {
-            return ("Vælg en ydelse, eller vælg Andet.", null, uploads);
+            return ("Vælg et produkt, eller vælg Andet.", null, uploads);
         }
 
         if (files != null)
@@ -206,6 +206,9 @@ public sealed partial class ContactController(DataContext db, IWebHostEnvironmen
                 uploads.Add(file);
             }
         }
+        // Bestilling af et produkt kræver mindst ét billede af cyklen. "Andet" er almindelig kontakt.
+        if (service != "andet" && uploads.Count < 1)
+            return ("Ved bestilling af et produkt skal du vedhæfte mindst ét billede af cyklen fra siden.", null, uploads);
         if (uploads.Count > MaxImages) return ($"Du kan højst vedhæfte {MaxImages} billeder.", null, uploads);
         foreach (var file in uploads)
         {

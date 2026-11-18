@@ -53,16 +53,16 @@ function ServicesManagerModal({ onClose, onEdit }: ServicesManagerModalProps) {
   };
 
   return (
-    <Modal title="Rediger ydelser" onClose={onClose} wide>
+    <Modal title="Rediger produkter" onClose={onClose} wide>
       <p className="admin-hint">
-        Ydelserne vises som kort på forsiden og i menuen under "Ydelser". Hver ydelse har sin egen side med tekst, billeder og video.
+        Produkterne vises som kort på forsiden og i menuen under "Produkter". Hvert produkt har sin egen side med tekst, billeder og video.
       </p>
 
       {error && <div className="admin-error">{error}</div>}
       {busy && <div className="admin-status">Gemmer…</div>}
 
       {services.length === 0 ? (
-        <p className="admin-empty">Der er ingen ydelser endnu.</p>
+        <p className="admin-empty">Der er ingen produkter endnu.</p>
       ) : (
         <ul className="svc-list">
           {services.map((s, index) => (
@@ -72,8 +72,8 @@ function ServicesManagerModal({ onClose, onEdit }: ServicesManagerModalProps) {
               </span>
               <span className="svc-row-main">
                 <strong>{s.title}</strong>
-                <a href={`/ydelser/${s.slug}`} className="svc-row-url">
-                  /ydelser/{s.slug}
+                <a href={`/produkter/${s.slug}`} className="svc-row-url">
+                  /produkter/{s.slug}
                 </a>
               </span>
               <span className="svc-row-meta">
@@ -94,7 +94,7 @@ function ServicesManagerModal({ onClose, onEdit }: ServicesManagerModalProps) {
                     Slet?
                   </button>
                 ) : (
-                  <button type="button" className="danger" onClick={() => setConfirmDelete(s.id)} disabled={busy} aria-label={`Slet ${s.title}`} title="Slet ydelse">
+                  <button type="button" className="danger" onClick={() => setConfirmDelete(s.id)} disabled={busy} aria-label={`Slet ${s.title}`} title="Slet produkt">
                     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
                       <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -108,7 +108,7 @@ function ServicesManagerModal({ onClose, onEdit }: ServicesManagerModalProps) {
 
       <div className="admin-actions">
         <button type="button" className="admin-btn secondary" onClick={() => onEdit(null)} disabled={busy}>
-          + Ny ydelse
+          + Nyt produkt
         </button>
         <button type="button" className="admin-btn" onClick={onClose}>
           Færdig

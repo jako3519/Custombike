@@ -14,7 +14,7 @@ export default defineConfig(({ isSsrBuild }) => ({
       emptyOutDir: true,
       copyPublicDir: false,
       rollupOptions: {
-        output: { format: 'iife' as const, name: 'CarltonSSR', entryFileNames: 'entry-server.js', inlineDynamicImports: true },
+        output: { format: 'iife' as const, name: 'CustombikeSSR', entryFileNames: 'entry-server.js', inlineDynamicImports: true },
       },
     },
   }),

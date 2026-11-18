@@ -6,7 +6,6 @@ public static class AdminWhitelist
 {
     private static readonly HashSet<string> Emails = new(StringComparer.OrdinalIgnoreCase)
     {
-        "cemmertsenlund@gmail.com",
         "jako3519@gmail.com",
     };
 

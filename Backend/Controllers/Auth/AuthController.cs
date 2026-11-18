@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
     {
         var frontendUrl = (_config["Frontend:Url"] ?? "http://localhost:5173").TrimEnd('/');
         // I drift serverer backend selv frontenden, saa login maa vende tilbage til den adresse,
-        // det blev startet fra (fly.dev eller carltonpaataget.dk). Lokalt er det Vite (Frontend:Url).
+        // det blev startet fra (samme vært som siden). Lokalt er det Vite (Frontend:Url).
         // Andre adresser afvises stadig (ingen open redirect).
         var requestOrigin = $"{Request.Scheme}://{Request.Host}";
         var allowed = IsFrontendUrl(returnUrl, frontendUrl) || IsFrontendUrl(returnUrl, requestOrigin);

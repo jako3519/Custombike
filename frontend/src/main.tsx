@@ -7,12 +7,23 @@ import { GalleryProvider } from "./gallery/GalleryContext";
 import { AdminProvider } from "./admin/AdminContext";
 import { ServicesProvider } from "./services/ServicesContext";
 import { loginUrl } from "./Api";
+import { legacyProductRedirect } from "./services/route";
+
+// /ydelser og /ydelser/<slug> -> /produkter (også i Vite, hvor serveren ikke sender 301)
+const legacyTarget = legacyProductRedirect(window.location.pathname);
+const hash = window.location.hash === "#ydelser" ? "#produkter" : window.location.hash;
+if (legacyTarget) {
+  const glue = legacyTarget.includes("#") ? "" : hash;
+  window.location.replace(legacyTarget + window.location.search + glue);
+} else if (hash !== window.location.hash) {
+  window.history.replaceState(null, "", window.location.pathname + window.location.search + hash);
+}
 
 // /admin (også /Admin) starter det almindelige login og vender derefter tilbage til forsiden
-if (window.location.pathname.replace(/\/+$/, "").toLowerCase() === "/admin") {
+if (!legacyTarget && window.location.pathname.replace(/\/+$/, "").toLowerCase() === "/admin") {
   window.history.replaceState(null, "", "/");
   window.location.replace(loginUrl());
-} else {
+} else if (!legacyTarget) {
   // Tekster, billeder og ydelser, som serveren har lagt ind i siden (tom i Vite dev)
   const initial = window.__INITIAL_DATA__ ?? {};
   const container = document.getElementById("root")!;

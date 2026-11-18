@@ -7,8 +7,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google-site-verification" content="mhgCYDpA8AQYpeSB9I7e6HgUoVjocRlWl1gni0WTU3g" />
-    <meta name="google-site-verification" content="sPA3l9EgQKdvFOVAwS9pBWYWqQmwcyPe9GjbG4GkwqA" />
+    <!--site-verification-->
 
     <!-- Google-samtykke (Consent Mode v2): standard er afvist, indtil brugeren vælger. Skal ligge før Tag Manager. -->
     <script>
@@ -25,7 +24,7 @@
       });
       gtag("set", "ads_data_redaction", true);
       try {
-        var raw = localStorage.getItem("carlton.consent");
+        var raw = localStorage.getItem("custombike.consent");
         if (raw) {
           var c = JSON.parse(raw);
           var maxAge = 365 * 24 * 60 * 60 * 1000;
@@ -41,47 +40,38 @@
         }
       } catch (e) {}
     </script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":
-    new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
-    "https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,"script","dataLayer","GTM-K2F2GWD6");</script>
-    <!-- End Google Tag Manager -->
+    <!--gtm-head-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <title>Tømrer i Ribe – tag, terrasser og byggeri | Carlton på Taget</title>
-    <meta name="description" content="Carlton på Taget er tømrer i Ribe og omegn: tagarbejde, terrasser, carporte, vinduer og døre, indvendigt tømrerarbejde og facader. Ring til Carl og fortæl om din opgave." />
-    <link rel="canonical" href="https://carltonpaataget.dk/" />
-    <meta name="theme-color" content="#2b2e4a" />
+    <title>Custombike – 3D-printede cykeldele til din cykel</title>
+    <meta name="description" content="Custombike ved It Service v/Jakob Lund printer cykeltilebehør i TPU, tilpasset den enkelte cykel. Se produkter og bestil ved at sende et billede af cyklen." />
+    <link rel="canonical" href="https://custombike.example/" />
+    <meta name="theme-color" content="#1c2830" />
 
     <!-- Deling på Facebook, SMS m.m. (Open Graph) -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="da_DK" />
-    <meta property="og:site_name" content="Carlton på Taget" />
-    <meta property="og:title" content="Tømrer i Ribe – tag, terrasser og byggeri | Carlton på Taget" />
-    <meta property="og:description" content="Carlton på Taget er tømrer i Ribe og omegn: tagarbejde, terrasser, carporte, vinduer og døre, indvendigt tømrerarbejde og facader. Ring til Carl og fortæl om din opgave." />
-    <meta property="og:url" content="https://carltonpaataget.dk/" />
-    <meta property="og:image" content="https://carltonpaataget.dk/og-image.png" />
+    <meta property="og:site_name" content="Custombike" />
+    <meta property="og:title" content="Custombike – 3D-printede cykeldele til din cykel" />
+    <meta property="og:description" content="Custombike ved It Service v/Jakob Lund printer cykeltilebehør i TPU, tilpasset den enkelte cykel. Se produkter og bestil ved at sende et billede af cyklen." />
+    <meta property="og:url" content="https://custombike.example/" />
+    <meta property="og:image" content="https://custombike.example/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Logo for Carlton på Taget" />
+    <meta property="og:image:alt" content="Custombike – cykeltilebehør printet til din cykel" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tømrer i Ribe – tag, terrasser og byggeri | Carlton på Taget" />
-    <meta name="twitter:description" content="Carlton på Taget er tømrer i Ribe og omegn: tagarbejde, terrasser, carporte, vinduer og døre, indvendigt tømrerarbejde og facader. Ring til Carl og fortæl om din opgave." />
-    <meta name="twitter:image" content="https://carltonpaataget.dk/og-image.png" />
-    <meta name="twitter:image:alt" content="Logo for Carlton på Taget" />
+    <meta name="twitter:title" content="Custombike – 3D-printede cykeldele til din cykel" />
+    <meta name="twitter:description" content="Custombike ved It Service v/Jakob Lund printer cykeltilebehør i TPU, tilpasset den enkelte cykel. Se produkter og bestil ved at sende et billede af cyklen." />
+    <meta name="twitter:image" content="https://custombike.example/og-image.png" />
+    <meta name="twitter:image:alt" content="Custombike – cykeltilebehør printet til din cykel" />
     <!-- Strukturerede data til Google (JSON-LD): sættes ind af serveren ud fra teksterne, se Backend/Prerender -->
     <!--app-jsonld-->
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2F2GWD6"
-    height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!--gtm-body-->
     <div id="root"><!--app-html--></div>
     <!--app-data-->
     <script type="module" src="/src/main.tsx"></script>

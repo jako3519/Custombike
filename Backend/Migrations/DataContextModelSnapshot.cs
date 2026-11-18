@@ -93,6 +93,91 @@ namespace Backend.Migrations
                     b.ToTable("AnalyticsSalts", (string)null);
                 });
 
+            modelBuilder.Entity("Backend.Models.ContactAttachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContactRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("OriginalName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactRequestId");
+
+                    b.ToTable("ContactAttachments", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Models.ContactRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<DateTime?>("HandledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("ServiceKey")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("ServiceTitle")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.ToTable("ContactRequests", (string)null);
+                });
+
             modelBuilder.Entity("Backend.Models.GalleryImage", b =>
                 {
                     b.Property<int>("Id")
@@ -241,92 +326,6 @@ namespace Backend.Migrations
                     b.ToTable("ServiceMedia", (string)null);
                 });
 
-
-            modelBuilder.Entity("Backend.Models.ContactRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(254)
-                        .HasColumnType("character varying(254)");
-
-                    b.Property<DateTime?>("HandledAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
-
-                    b.Property<string>("ServiceKey")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)");
-
-                    b.Property<string>("ServiceTitle")
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.ToTable("ContactRequests", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Models.ContactAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContactRequestId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("OriginalName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactRequestId");
-
-                    b.ToTable("ContactAttachments", (string)null);
-                });
-
             modelBuilder.Entity("Backend.Models.SiteText", b =>
                 {
                     b.Property<string>("Id")
@@ -350,13 +349,13 @@ namespace Backend.Migrations
                         {
                             Id = "company.name",
                             Description = "Firmanavn i navbar og footer",
-                            Value = "Byg & Hyg"
+                            Value = "Custombike"
                         },
                         new
                         {
                             Id = "nav.about",
-                            Description = "Menupunkt til Om mig",
-                            Value = "Om mig"
+                            Description = "Menupunkt til Om os",
+                            Value = "Om os"
                         },
                         new
                         {
@@ -374,13 +373,13 @@ namespace Backend.Migrations
                         {
                             Id = "hero.title",
                             Description = "Stor overskrift på forsiden",
-                            Value = "Håndværk i træ"
+                            Value = "Printet til din cykel"
                         },
                         new
                         {
                             Id = "hero.subtitle",
                             Description = "Undertekst på forsiden",
-                            Value = "Tømrerarbejde, terrasser og byggeri – udført med omhu"
+                            Value = "3D-printede holdere og dele i TPU, tilpasset cykelmodellen."
                         },
                         new
                         {
@@ -391,14 +390,14 @@ namespace Backend.Migrations
                         new
                         {
                             Id = "about.title",
-                            Description = "Overskrift i Om mig",
-                            Value = "Om mig"
+                            Description = "Overskrift i Om os",
+                            Value = "Om os"
                         },
                         new
                         {
                             Id = "about.body",
-                            Description = "Brødtekst i Om mig (tom linje = nyt afsnit)",
-                            Value = "Skriv lidt om dig selv og firmaet her.\n\nTom linje giver nyt afsnit."
+                            Description = "Brødtekst i Om os (tom linje = nyt afsnit)",
+                            Value = "PLACEHOLDER – Jakob skal skrive denne tekst om.\n\nCustombike er It Service v/Jakob Lund (CVR 42637688). Vi printer cykeltilebehør i 3D, ofte i TPU, og tilpasser det til den enkelte cykel – for eksempel en holder til Garmin Varia, vinklet efter sadelpinden."
                         },
                         new
                         {
@@ -410,7 +409,7 @@ namespace Backend.Migrations
                         {
                             Id = "gallery.subtitle",
                             Description = "Undertekst i Billeder",
-                            Value = "Et udvalg af opgaver jeg har lavet"
+                            Value = "Eksempler på dele, der er printet til en bestemt cykel."
                         },
                         new
                         {
@@ -422,19 +421,19 @@ namespace Backend.Migrations
                         {
                             Id = "contact.title",
                             Description = "Overskrift i kontakt-boksen",
-                            Value = "Kontakt os i dag"
+                            Value = "Kontakt"
                         },
                         new
                         {
                             Id = "contact.email",
                             Description = "E-mail i kontakt-boksen",
-                            Value = "bygoghyg.is@gmail.com"
+                            Value = "jako3519@gmail.com"
                         },
                         new
                         {
                             Id = "contact.phone",
                             Description = "Telefonnummer i kontakt-boksen",
-                            Value = "+45 50 36 63 92"
+                            Value = "+45 40 26 26 64"
                         },
                         new
                         {
@@ -445,8 +444,8 @@ namespace Backend.Migrations
                         new
                         {
                             Id = "contact.facebookUrl",
-                            Description = "Adresse på Facebook-siden",
-                            Value = "https://www.facebook.com/"
+                            Description = "Adresse på Facebook-siden (tom = linket vises ikke)",
+                            Value = ""
                         },
                         new
                         {
@@ -458,163 +457,163 @@ namespace Backend.Migrations
                         {
                             Id = "company.legalName",
                             Description = "Juridisk navn/virksomhedsform i bunden af siden",
-                            Value = "Carlton på Taget, enkeltmandsvirksomhed v/Carl Anton Emmertsen Lund"
+                            Value = "It Service v/Jakob Lund"
                         },
                         new
                         {
                             Id = "company.address",
-                            Description = "Adresse i bunden af siden (gade, postnr. by)",
-                            Value = "Sviegade 2B, 1., 6760 Ribe"
+                            Description = "Adresse i bunden af siden (gade, postnr. by). Tom indtil den er udfyldt.",
+                            Value = ""
                         },
                         new
                         {
                             Id = "company.cvr",
                             Description = "CVR-nummer i bunden af siden",
-                            Value = "43633104"
+                            Value = "42637688"
                         },
                         new
                         {
                             Id = "company.footerText",
                             Description = "Kort tekst om firmaet i bunden af siden",
-                            Value = "Carlton på Taget holder til i Ribe og arbejder i hele byen og omegnen. Carl laver tømrerarbejde, tag og terrasser – og du kan se færdige opgaver i galleriet her på siden, før du beslutter dig."
+                            Value = "Custombike printer cykeltilebehør til den enkelte cykel. PLACEHOLDER – Jakob skal skrive denne tekst om."
                         },
                         new
                         {
                             Id = "nav.services",
-                            Description = "Menupunkt til Ydelser",
-                            Value = "Ydelser"
+                            Description = "Menupunkt til Produkter",
+                            Value = "Produkter"
                         },
                         new
                         {
                             Id = "services.title",
-                            Description = "Overskrift i Ydelser",
-                            Value = "Ydelser"
+                            Description = "Overskrift i Produkter",
+                            Value = "Produkter"
                         },
                         new
                         {
                             Id = "services.subtitle",
-                            Description = "Undertekst i Ydelser",
-                            Value = "Tømrerarbejde for private i Ribe og omegn – fra tag og terrasse til opgaver inden døre."
+                            Description = "Undertekst i Produkter",
+                            Value = "Hver kategori er en type del. Vælg den, og bestil ved at sende et billede af cyklen."
                         },
                         new
                         {
                             Id = "services.1.title",
-                            Description = "Ydelse 1 – titel",
-                            Value = "Tagarbejde"
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.1.text",
-                            Description = "Ydelse 1 – tekst",
-                            Value = "Nyt tag, tagrenovering, udskiftning af tagplader og reparation af utætte tage."
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.2.title",
-                            Description = "Ydelse 2 – titel",
-                            Value = "Terrasser"
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.2.text",
-                            Description = "Ydelse 2 – tekst",
-                            Value = "Nye træterrasser, hævede terrasser og renovering af gamle terrasser."
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.3.title",
-                            Description = "Ydelse 3 – titel",
-                            Value = "Tilbygninger og carporte"
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.3.text",
-                            Description = "Ydelse 3 – tekst",
-                            Value = "Carporte, skure, overdækninger og mindre tilbygninger."
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.4.title",
-                            Description = "Ydelse 4 – titel",
-                            Value = "Vinduer og døre"
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.4.text",
-                            Description = "Ydelse 4 – tekst",
-                            Value = "Udskiftning og montering af vinduer, døre og ovenlysvinduer."
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.5.title",
-                            Description = "Ydelse 5 – titel",
-                            Value = "Indvendigt tømrerarbejde"
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.5.text",
-                            Description = "Ydelse 5 – tekst",
-                            Value = "Gulve, lofter, skillevægge og efterisolering."
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.6.title",
-                            Description = "Ydelse 6 – titel",
-                            Value = "Facader og beklædning"
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.6.text",
-                            Description = "Ydelse 6 – tekst",
-                            Value = "Træbeklædning, sternbrædder og vindskeder."
+                            Description = "Ikke i brug – gammelt felt fra før produkterne lå i deres egen tabel",
+                            Value = ""
                         },
                         new
                         {
                             Id = "services.note",
-                            Description = "Linje under ydelserne om småopgaver",
-                            Value = "Småopgaver og reparationer: Carl tager også mindre opgaver for private i Ribe og omegn."
+                            Description = "Linje under produkterne",
+                            Value = "Der er ingen kurv eller betaling endnu. En bestilling er en besked med billede, så delen kan tilpasses."
                         },
                         new
                         {
                             Id = "services.readMore",
-                            Description = "Link på ydelseskortene til ydelsens egen side",
+                            Description = "Link på produktkortene til produktets egen side",
                             Value = "Læs mere"
                         },
                         new
                         {
                             Id = "service.back",
-                            Description = "Ydelsesside – link tilbage til alle ydelser",
-                            Value = "Alle ydelser"
+                            Description = "Produktside – link tilbage til alle produkter",
+                            Value = "Alle produkter"
                         },
                         new
                         {
                             Id = "service.mediaTitle",
-                            Description = "Ydelsesside – overskrift over billeder og videoer",
+                            Description = "Produktside – overskrift over billeder og videoer",
                             Value = "Billeder og video"
                         },
                         new
                         {
                             Id = "service.ctaTitle",
-                            Description = "Ydelsesside – overskrift i kontaktboksen",
-                            Value = "Skal Carl hjælpe med opgaven?"
+                            Description = "Produktside – overskrift i bestillingsboksen",
+                            Value = "Bestil til din cykel"
                         },
                         new
                         {
                             Id = "service.ctaText",
-                            Description = "Ydelsesside – tekst i kontaktboksen",
-                            Value = "Ring eller skriv og fortæl, hvad du har brug for."
+                            Description = "Produktside – tekst i bestillingsboksen",
+                            Value = "Send et billede af cyklen fra siden, så vinklen kan måles, og delen kan printes til netop din cykel."
                         },
                         new
                         {
                             Id = "service.ctaButton",
-                            Description = "Ydelsesside – knap der åbner kontaktboksen",
-                            Value = "Skriv til Carl"
+                            Description = "Produktside – knap der åbner bestillingsformularen",
+                            Value = "Bestil – send billede af din cykel"
                         },
                         new
                         {
                             Id = "service.otherTitle",
-                            Description = "Ydelsesside – overskrift over de andre ydelser",
-                            Value = "Andre ydelser"
+                            Description = "Produktside – overskrift over de andre produkter",
+                            Value = "Andre produkter"
                         },
                         new
                         {
@@ -626,7 +625,7 @@ namespace Backend.Migrations
                         {
                             Id = "notFound.text",
                             Description = "Side der ikke findes – tekst",
-                            Value = "Siden er måske flyttet eller slettet. Se alle ydelser på forsiden."
+                            Value = "Siden er måske flyttet eller slettet. Se alle produkter på forsiden."
                         },
                         new
                         {
@@ -638,13 +637,25 @@ namespace Backend.Migrations
                         {
                             Id = "contact.formTitle",
                             Description = "Overskrift over kontaktformularen",
-                            Value = "Skriv til Carl"
+                            Value = "Skriv til os"
                         },
                         new
                         {
                             Id = "contact.formIntro",
                             Description = "Kort tekst over kontaktformularen",
-                            Value = "Fortæl kort om opgaven, så ringer eller skriver Carl tilbage."
+                            Value = "Fortæl kort, hvad du har brug for, så vender vi tilbage."
+                        },
+                        new
+                        {
+                            Id = "contact.orderIntro",
+                            Description = "Tekst over formularen, når den åbnes fra et produkt",
+                            Value = "Bestil ved at sende mindst ét billede af cyklen fra siden, så vinklen kan måles."
+                        },
+                        new
+                        {
+                            Id = "contact.photoHelp",
+                            Description = "Hjælpetekst når et billede af cyklen er påkrævet",
+                            Value = "Fotografer cyklen fra siden, i omtrent samme højde som sadelpinden, så hele pinden er med. Så kan vinklen måles. Jpg, png, webp eller heic – højst 5 billeder, 15 MB pr. billede."
                         },
                         new
                         {
@@ -655,8 +666,14 @@ namespace Backend.Migrations
                         new
                         {
                             Id = "contact.submit",
-                            Description = "Knap på kontaktformularen",
+                            Description = "Knap på kontaktformularen, når der ikke er valgt et produkt",
                             Value = "Send besked"
+                        },
+                        new
+                        {
+                            Id = "contact.orderSubmit",
+                            Description = "Knap på formularen, når et produkt er valgt",
+                            Value = "Bestil – send billede af din cykel"
                         },
                         new
                         {
@@ -668,7 +685,7 @@ namespace Backend.Migrations
                         {
                             Id = "contact.thanksText",
                             Description = "Tekst på tak-siden efter en henvendelse",
-                            Value = "Carl har modtaget din besked og vender tilbage hurtigst muligt."
+                            Value = "Vi har modtaget din besked og vender tilbage hurtigst muligt."
                         },
                         new
                         {
@@ -680,7 +697,7 @@ namespace Backend.Migrations
                         {
                             Id = "cookie.body",
                             Description = "Brødtekst på siden Cookiepolitik (tom linje = nyt afsnit, ## Overskrift ##)",
-                            Value = "Carlton på Taget (CVR 43633104), Sviegade 2B, 1., 6760 Ribe, er dataansvarlig for behandlingen af personoplysninger på denne hjemmeside.\n\nVi bruger cookies og lignende teknikker. Nødvendige funktioner virker altid. Cookies til statistik og marketing (Google) sættes kun, hvis du giver samtykke.\n\n## Nødvendige ##\n\nDisse er nødvendige for, at siden virker, og kræver ikke samtykke.\n\nDit valg om cookies huskes i din browser (localStorage, navn carlton.consent) i 12 måneder, så vi ikke spørger dig igen ved hvert besøg.\n\nHvis du er logget ind som administrator, bruges en login-cookie (carlton.auth) til at holde dig logget ind.\n\n## Statistik og marketing (Google) ##\n\nKun med dit samtykke indlæser vi Google Tag Manager (beholder GTM-K2F2GWD6). Den kan starte tags fra Google Analytics (statistik) og Google Ads (marketing og annoncemåling).\n\nDe typiske cookies, Google kan sætte, er blandt andet:\n\nStatistik: _ga og _ga_* (typisk op til 13–24 måneder) samt _gid (24 timer). De bruges til at skelne besøg og forstå, hvordan siden bruges.\n\nMarketing: _gcl_au, _gcl_aw og lignende (typisk op til 90 dage). De bruges til at måle annoncer og eventuelt vise mere relevante annoncer.\n\nDen præcise liste afhænger af de tags, der er sat op i Google Tag Manager. Data sendes til Google Ireland Limited og kan blive videregivet til Google LLC i USA. Google behandler oplysningerne efter deres privatlivspolitik (policies.google.com/privacy).\n\n## Vores egen statistik ##\n\nSiden har også en indbygget, cookiefri besøgsstatistik, som ikke bruger cookies og ikke kræver samtykke. Den kører uafhængigt af Google.\n\n## Sådan trækker du samtykket tilbage ##\n\nDu kan altid ændre eller trække dit samtykke tilbage via linket \"Cookie-indstillinger\" i bunden af siden. Valget huskes i 12 måneder, eller indtil du ændrer det. Du kan også slette gemte data i din browser.\n\nHar du spørgsmål til vores brug af cookies, kan du kontakte os på de kontaktoplysninger, der står i bunden af siden."
+                            Value = "Custombike ved It Service v/Jakob Lund (CVR 42637688) er dataansvarlig for behandlingen af personoplysninger på denne hjemmeside.\n\nVi bruger cookies og lignende teknikker. Nødvendige funktioner virker altid. Cookies til statistik og marketing (Google) sættes kun, hvis du giver samtykke, og kun hvis Google Tag Manager er sat op.\n\n## Nødvendige ##\n\nDisse er nødvendige for, at siden virker, og kræver ikke samtykke.\n\nDit valg om cookies huskes i din browser (localStorage, navn custombike.consent) i 12 måneder, så vi ikke spørger dig igen ved hvert besøg.\n\nHvis du er logget ind som administrator, bruges en login-cookie (custombike.auth) til at holde dig logget ind.\n\n## Statistik og marketing (Google) ##\n\nKun med dit samtykke, og kun når et container-id er konfigureret, indlæser vi Google Tag Manager. Den kan starte tags fra Google Analytics (statistik) og Google Ads (marketing og annoncemåling). Uden container-id indlæses Google ikke.\n\nDe typiske cookies, Google kan sætte, er blandt andet:\n\nStatistik: _ga og _ga_* (typisk op til 13–24 måneder) samt _gid (24 timer). De bruges til at skelne besøg og forstå, hvordan siden bruges.\n\nMarketing: _gcl_au, _gcl_aw og lignende (typisk op til 90 dage). De bruges til at måle annoncer og eventuelt vise mere relevante annoncer.\n\nDen præcise liste afhænger af de tags, der er sat op i Google Tag Manager. Data sendes til Google Ireland Limited og kan blive videregivet til Google LLC i USA. Google behandler oplysningerne efter deres privatlivspolitik (policies.google.com/privacy).\n\n## Vores egen statistik ##\n\nSiden har også en indbygget, cookiefri besøgsstatistik, som ikke bruger cookies og ikke kræver samtykke. Den kører uafhængigt af Google.\n\n## Sådan trækker du samtykket tilbage ##\n\nDu kan altid ændre eller trække dit samtykke tilbage via linket \"Cookie-indstillinger\" i bunden af siden. Valget huskes i 12 måneder, eller indtil du ændrer det. Du kan også slette gemte data i din browser.\n\nHar du spørgsmål til vores brug af cookies, kan du kontakte os på de kontaktoplysninger, der står i bunden af siden."
                         });
                 });
 
@@ -703,7 +720,6 @@ namespace Backend.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
-
             modelBuilder.Entity("Backend.Models.ContactAttachment", b =>
                 {
                     b.HasOne("Backend.Models.ContactRequest", "Request")
@@ -715,11 +731,6 @@ namespace Backend.Migrations
                     b.Navigation("Request");
                 });
 
-            modelBuilder.Entity("Backend.Models.ContactRequest", b =>
-                {
-                    b.Navigation("Attachments");
-                });
-
             modelBuilder.Entity("Backend.Models.ServiceMedia", b =>
                 {
                     b.HasOne("Backend.Models.Service", "Service")
@@ -729,6 +740,11 @@ namespace Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Backend.Models.ContactRequest", b =>
+                {
+                    b.Navigation("Attachments");
                 });
 
             modelBuilder.Entity("Backend.Models.Service", b =>

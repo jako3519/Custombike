@@ -17,7 +17,7 @@ namespace Backend.Prerender;
 // med dataene (window.__INITIAL_DATA__), og browseren "hydrerer" den faerdige HTML.
 // HTML'en caches og genbruges, indtil teksterne/billederne (eller de byggede filer) aendrer sig,
 // saa en rettelse i admin ses med det samme uden nyt deploy.
-// Siderne: forsiden ("/"), en ydelse ("/ydelser/<slug>"), cookiepolitik ("/cookiepolitik"),
+// Siderne: forsiden ("/"), et produkt ("/produkter/<slug>"), cookiepolitik ("/cookiepolitik"),
 // kontakt ("/kontakt"), tak ("/tak") og "siden findes ikke" (404).
 // Hver side faar sin egen titel, beskrivelse, canonical, Open Graph og strukturerede data i <head>.
 public sealed record RenderedPage(string Html, int StatusCode, string? RedirectTo = null);
@@ -57,6 +57,8 @@ public sealed partial class PrerenderService
     private readonly ILogger<PrerenderService> _logger;
     private readonly string _bundlePath;
     private readonly string _siteUrl;
+    private readonly string _gtmId;
+    private readonly string[] _verifications;
     private readonly object _lock = new();
 
     private Engine? _engine;
@@ -70,8 +72,33 @@ public sealed partial class PrerenderService
         _env = env;
         _logger = logger;
         _bundlePath = config["Prerender:Bundle"] ?? Path.Combine(env.ContentRootPath, "ssr", "entry-server.js");
-        var siteUrl = config["Site:Url"] ?? "https://carltonpaataget.dk/";
-        _siteUrl = siteUrl.EndsWith("/") ? siteUrl : siteUrl + "/";
+        var siteUrl = (config["Site:Url"] ?? "").Trim();
+        _siteUrl = siteUrl.Length == 0 ? "" : siteUrl.EndsWith('/') ? siteUrl : siteUrl + "/";
+        _gtmId = NormalizeGtm(config["Analytics:GtmId"] ?? Environment.GetEnvironmentVariable("GTM_ID"));
+        _verifications = (config["Site:GoogleSiteVerification"] ?? "")
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(v => VerificationRegex().IsMatch(v))
+            .ToArray();
+    }
+
+    // Tom eller ugyldig = Google Tag Manager indlæses ikke.
+    private static string NormalizeGtm(string? raw)
+    {
+        var id = (raw ?? "").Trim().ToUpperInvariant();
+        return GtmRegex().IsMatch(id) ? id : "";
+    }
+
+    [GeneratedRegex(@"^GTM-[A-Z0-9]+$")]
+    private static partial Regex GtmRegex();
+
+    [GeneratedRegex(@"^[A-Za-z0-9_-]{8,120}$")]
+    private static partial Regex VerificationRegex();
+
+    private string Absolute(string relative)
+    {
+        var path = relative.TrimStart('/');
+        if (_siteUrl.Length == 0) return path.Length == 0 ? "/" : "/" + path;
+        return path.Length == 0 ? _siteUrl : _siteUrl + path;
     }
 
     private string WebRoot => _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
@@ -84,23 +111,32 @@ public sealed partial class PrerenderService
 
         var (texts, gallery, services, dataOk) = await LoadDataAsync(db, ct);
 
-        // Hvilken side? /ydelser/<slug> er en ydelse; alt andet er forsiden (som hidtil)
+        // Gamle adresser /ydelser og /ydelser/<slug> -> /produkter
+        var legacy = LegacyServicePathRegex().Match(path);
+        if (legacy.Success)
+        {
+            var oldSlug = legacy.Groups["slug"].Success ? Uri.UnescapeDataString(legacy.Groups["slug"].Value) : "";
+            var target = oldSlug.Length == 0 ? "/#produkter" : "/produkter/" + oldSlug;
+            return new RenderedPage("", StatusCodes.Status301MovedPermanently, target);
+        }
+
+        // Hvilken side? /produkter/<slug> er et produkt; alt andet er forsiden (som hidtil)
         var page = "home";
         ServiceDto? service = null;
         var match = ServicePathRegex().Match(path);
         if (match.Success)
         {
             var slug = Uri.UnescapeDataString(match.Groups["slug"].Value);
-            if (slug.Length == 0) return new RenderedPage("", StatusCodes.Status301MovedPermanently, "/#ydelser");
+            if (slug.Length == 0) return new RenderedPage("", StatusCodes.Status301MovedPermanently, "/#produkter");
 
             service = services.FirstOrDefault(s => s.Slug == slug);
             var loose = service ?? services.FirstOrDefault(s => string.Equals(s.Slug, slug, StringComparison.OrdinalIgnoreCase));
             // Forkert stavemaade (store bogstaver / skraastreg til sidst): videre til den rigtige adresse
-            if (loose != null && (service == null || path != "/ydelser/" + loose.Slug))
-                return new RenderedPage("", StatusCodes.Status301MovedPermanently, "/ydelser/" + loose.Slug);
+            if (loose != null && (service == null || path != "/produkter/" + loose.Slug))
+                return new RenderedPage("", StatusCodes.Status301MovedPermanently, "/produkter/" + loose.Slug);
 
             page = service != null ? "service" : "notfound";
-            path = service != null ? "/ydelser/" + service.Slug : path;
+            path = service != null ? "/produkter/" + service.Slug : path;
         }
         else if (CookiePathRegex().IsMatch(path))
         {
@@ -149,7 +185,7 @@ public sealed partial class PrerenderService
                 try
                 {
                     _engine.SetValue("__data", dataJson);
-                    appHtml = _engine.Evaluate("CarltonSSR.render(__data)").AsString();
+                    appHtml = _engine.Evaluate("CustombikeSSR.render(__data)").AsString();
                     rendered = true;
                 }
                 catch (Exception ex)
@@ -166,7 +202,7 @@ public sealed partial class PrerenderService
                 "kontakt" => KontaktHead(_template!, textMap),
                 "thanks" => ThanksHead(_template!, textMap),
                 "notfound" => NotFoundHead(_template!, textMap),
-                _ => _template!,
+                _ => ApplyHomeHead(_template!),
             };
 
             // JSON fra System.Text.Json escaper < > & osv., saa den er sikker inde i <script>
@@ -184,9 +220,13 @@ public sealed partial class PrerenderService
         }
     }
 
-    // /ydelser, /ydelser/ og /ydelser/<slug>(/)
-    [GeneratedRegex(@"^/ydelser(?:/(?<slug>[^/]*))?/?$", RegexOptions.IgnoreCase)]
+    // /produkter, /produkter/ og /produkter/<slug>(/)
+    [GeneratedRegex(@"^/produkter(?:/(?<slug>[^/]*))?/?$", RegexOptions.IgnoreCase)]
     private static partial Regex ServicePathRegex();
+
+    // Gamle adresser fra før produkterne hed /produkter
+    [GeneratedRegex(@"^/ydelser(?:/(?<slug>[^/]*))?/?$", RegexOptions.IgnoreCase)]
+    private static partial Regex LegacyServicePathRegex();
 
     [GeneratedRegex(@"^/cookiepolitik/?$", RegexOptions.IgnoreCase)]
     private static partial Regex CookiePathRegex();
@@ -249,8 +289,8 @@ public sealed partial class PrerenderService
         var city = CityFromAddress(Get("company.address"));
         var title = service.Title + (city != "" ? $" i {city}" : "") + (company != "" ? $" | {company}" : "");
         var description = Describe(service.ShortText != "" ? service.ShortText : service.Body, 160);
-        var url = _siteUrl + "ydelser/" + service.Slug;
-        var image = service.CoverUrl != null ? _siteUrl + service.CoverUrl.TrimStart('/') : null;
+        var url = Absolute("produkter/" + service.Slug);
+        var image = service.CoverUrl != null ? Absolute(service.CoverUrl) : null;
 
         var html = SetHead(template, title, description, url);
         if (image != null)
@@ -272,8 +312,8 @@ public sealed partial class PrerenderService
         var heading = Get("contact.formTitle") is { Length: > 0 } t ? t : "Kontakt";
         var title = heading + (company != "" ? $" | {company}" : "");
         var description = Describe(Get("contact.formIntro"), 160);
-        if (description == "") description = "Skriv til Carlton på Taget og fortæl om din opgave. Carl ringer eller skriver tilbage.";
-        return SetHead(template, title, description, _siteUrl + "kontakt");
+        if (description == "") description = "Skriv til Custombike og fortæl, hvad du har brug for. Vi vender tilbage.";
+        return SetHead(template, title, description, Absolute("kontakt"));
     }
 
     private static string ThanksHead(string template, IReadOnlyDictionary<string, string> texts)
@@ -294,8 +334,8 @@ public sealed partial class PrerenderService
         var heading = Get("cookie.title") is { Length: > 0 } t ? t : "Cookiepolitik";
         var title = heading + (company != "" ? $" | {company}" : "");
         var description = Describe(Get("cookie.body"), 160);
-        if (description == "") description = "Sådan bruger Carlton på Taget cookies, og hvordan du giver eller trækker dit samtykke tilbage.";
-        return SetHead(template, title, description, _siteUrl + "cookiepolitik");
+        if (description == "") description = "Sådan bruger Custombike cookies, og hvordan du giver eller trækker dit samtykke tilbage.";
+        return SetHead(template, title, description, Absolute("cookiepolitik"));
     }
 
     private static string NotFoundHead(string template, IReadOnlyDictionary<string, string> texts)
@@ -373,13 +413,13 @@ public sealed partial class PrerenderService
         var ld = new Dictionary<string, object?>
         {
             ["@context"] = "https://schema.org",
-            ["@type"] = "HomeAndConstructionBusiness",
-            ["@id"] = _siteUrl + "#virksomhed",
+            ["@type"] = "Store",
+            ["@id"] = Absolute("") + "#virksomhed",
             ["name"] = Get("company.name"),
             ["legalName"] = Get("company.legalName"),
-            ["url"] = _siteUrl,
-            ["logo"] = _siteUrl + "apple-touch-icon.png",
-            ["image"] = _siteUrl + "og-image.png",
+            ["url"] = Absolute(""),
+            ["logo"] = Absolute("apple-touch-icon.png"),
+            ["image"] = Absolute("og-image.png"),
             ["telephone"] = Regex.Replace(Get("contact.phone"), @"[^\d+]", ""),
             ["email"] = Get("contact.email"),
             ["address"] = address == "" ? null : Compact(postal),
@@ -389,16 +429,16 @@ public sealed partial class PrerenderService
             ["hasOfferCatalog"] = services.Count == 0 ? null : new Dictionary<string, object?>
             {
                 ["@type"] = "OfferCatalog",
-                ["name"] = "Ydelser",
+                ["name"] = Get("services.title") is { Length: > 0 } catalog ? catalog : "Produkter",
                 ["itemListElement"] = services.Select(s => new Dictionary<string, object?>
                 {
                     ["@type"] = "Offer",
                     ["itemOffered"] = new Dictionary<string, object?>
                     {
-                        ["@type"] = "Service",
-                        ["@id"] = _siteUrl + "ydelser/" + s.Slug + "#ydelse",
+                        ["@type"] = "Product",
+                        ["@id"] = Absolute("produkter/" + s.Slug) + "#produkt",
                         ["name"] = s.Title,
-                        ["url"] = _siteUrl + "ydelser/" + s.Slug,
+                        ["url"] = Absolute("produkter/" + s.Slug),
                     },
                 }).ToList(),
             },
@@ -410,18 +450,18 @@ public sealed partial class PrerenderService
         // Paa en ydelses side: selve ydelsen (knyttet til virksomheden via @id) og en broedkrumme
         if (current != null)
         {
-            var url = _siteUrl + "ydelser/" + current.Slug;
+            var url = Absolute("produkter/" + current.Slug);
             var service = new Dictionary<string, object?>
             {
                 ["@context"] = "https://schema.org",
-                ["@type"] = "Service",
-                ["@id"] = url + "#ydelse",
+                ["@type"] = "Product",
+                ["@id"] = url + "#produkt",
                 ["name"] = current.Title,
                 ["serviceType"] = current.Title,
                 ["description"] = Describe(current.ShortText != "" ? current.ShortText : current.Body, 300),
                 ["url"] = url,
-                ["image"] = current.CoverUrl == null ? null : _siteUrl + current.CoverUrl.TrimStart('/'),
-                ["provider"] = new Dictionary<string, object?> { ["@id"] = _siteUrl + "#virksomhed" },
+                ["image"] = current.CoverUrl == null ? null : Absolute(current.CoverUrl),
+                ["provider"] = new Dictionary<string, object?> { ["@id"] = Absolute("") + "#virksomhed" },
                 ["areaServed"] = city == "" ? null : new Dictionary<string, object?> { ["@type"] = "City", ["name"] = city },
             };
             var crumbs = new Dictionary<string, object?>
@@ -430,8 +470,8 @@ public sealed partial class PrerenderService
                 ["@type"] = "BreadcrumbList",
                 ["itemListElement"] = new object[]
                 {
-                    new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 1, ["name"] = Get("company.name") is { Length: > 0 } n ? n : "Forside", ["item"] = _siteUrl },
-                    new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 2, ["name"] = Get("services.title") is { Length: > 0 } y ? y : "Ydelser", ["item"] = _siteUrl + "#ydelser" },
+                    new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 1, ["name"] = Get("company.name") is { Length: > 0 } n ? n : "Forside", ["item"] = Absolute("") },
+                    new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 2, ["name"] = Get("services.title") is { Length: > 0 } y ? y : "Produkter", ["item"] = Absolute("") + "#produkter" },
                     new Dictionary<string, object?> { ["@type"] = "ListItem", ["position"] = 3, ["name"] = current.Title, ["item"] = url },
                 },
             };
@@ -446,13 +486,50 @@ public sealed partial class PrerenderService
         d.Where(kv => kv.Value is not null && !(kv.Value is string s && s == ""))
          .ToDictionary(kv => kv.Key, kv => kv.Value);
 
+    // Forsidens titel og beskrivelse står i index.html. Her gøres adresser absolutte, når Site:Url er sat.
+    private string ApplyHomeHead(string html)
+    {
+        if (_siteUrl.Length == 0) return html;
+        html = Regex.Replace(html, @"<link\s+rel=""canonical""\s+href=""[^""]*""\s*/?>",
+            _ => $"<link rel=\"canonical\" href=\"{Html.Encode(_siteUrl)}\" />");
+        html = ReplaceMeta(html, "property", "og:url", _siteUrl);
+        html = ReplaceMeta(html, "property", "og:image", Absolute("og-image.png"));
+        html = ReplaceMeta(html, "name", "twitter:image", Absolute("og-image.png"));
+        return html;
+    }
+
+    // Google Tag Manager og Search Console sættes kun ind, når de er konfigureret. Tomt = ingen Google-tags.
+    private string DecorateTemplate(string html)
+    {
+        var verify = string.Concat(_verifications.Select(v =>
+            $"\n    <meta name=\"google-site-verification\" content=\"{Html.Encode(v)}\" />"));
+        var gtmHead = "";
+        var gtmBody = "";
+        if (_gtmId.Length > 0)
+        {
+            gtmHead =
+                "\n    <!-- Google Tag Manager -->\n    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({\"gtm.start\":\n" +
+                "    new Date().getTime(),event:\"gtm.js\"});var f=d.getElementsByTagName(s)[0],\n" +
+                "    j=d.createElement(s),dl=l!=\"dataLayer\"?\"&l=\"+l:\"\";j.async=true;j.src=\n" +
+                "    \"https://www.googletagmanager.com/gtm.js?id=\"+i+dl;f.parentNode.insertBefore(j,f);\n" +
+                "    })(window,document,\"script\",\"dataLayer\",\"" + _gtmId + "\");</script>\n    <!-- End Google Tag Manager -->";
+            gtmBody =
+                "\n    <!-- Google Tag Manager (noscript) -->\n    <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=" +
+                _gtmId + "\"\n    height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\" title=\"Google Tag Manager\"></iframe></noscript>\n    <!-- End Google Tag Manager (noscript) -->";
+        }
+        return html
+            .Replace("<!--site-verification-->", verify)
+            .Replace("<!--gtm-head-->", gtmHead)
+            .Replace("<!--gtm-body-->", gtmBody);
+    }
+
     // Indlaeser index.html og server-bundlet igen, hvis filerne er blevet aendret (nyt build)
     private void ReloadIfChanged()
     {
         var templateStamp = File.GetLastWriteTimeUtc(TemplatePath);
         if (_template == null || templateStamp != _templateStamp)
         {
-            _template = File.ReadAllText(TemplatePath);
+            _template = DecorateTemplate(File.ReadAllText(TemplatePath));
             _templateStamp = templateStamp;
             _cache.Clear();
         }

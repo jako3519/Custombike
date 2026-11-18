@@ -18,7 +18,7 @@ import { clickTarget, setAnalyticsEnabled, trackClick, trackPageview } from "./a
 import "./App.css";
 
 type AppProps = {
-  // Siden der vises: "/", "/ydelser/<slug>", "/cookiepolitik", "/kontakt" eller "/tak".
+  // Siden der vises: "/", "/produkter/<slug>", "/cookiepolitik", "/kontakt" eller "/tak".
   path: string;
 };
 

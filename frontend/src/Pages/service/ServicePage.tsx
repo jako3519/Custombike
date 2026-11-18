@@ -15,7 +15,7 @@ type ServicePageProps = {
   onContactClick: () => void;
 };
 
-// En ydelses egen side: /ydelser/<slug>
+// En ydelses egen side: /produkter/<slug>
 function ServicePage({ service, onContactClick }: ServicePageProps) {
   const { services } = useServices();
   const { isAdmin, editService } = useAdmin();
@@ -40,7 +40,7 @@ function ServicePage({ service, onContactClick }: ServicePageProps) {
           <nav className="breadcrumbs" aria-label="Du er her">
             <a href="/">{companyName}</a>
             <span aria-hidden="true">›</span>
-            <a href="/#ydelser">{servicesTitle}</a>
+            <a href="/#produkter">{servicesTitle}</a>
             <span aria-hidden="true">›</span>
             <span aria-current="page">{service.title}</span>
           </nav>
@@ -49,7 +49,7 @@ function ServicePage({ service, onContactClick }: ServicePageProps) {
           </span>
           <h1>
             {service.title}
-            <EditButton onClick={() => editService(service.id)} label="Rediger ydelse" />
+            <EditButton onClick={() => editService(service.id)} label="Rediger produkt" />
           </h1>
         </div>
       </header>
@@ -109,7 +109,7 @@ function ServicePage({ service, onContactClick }: ServicePageProps) {
             <ul className="service-others-list">
               {others.map((s) => (
                 <li key={s.id}>
-                  <a href={`/ydelser/${s.slug}`}>
+                  <a href={`/produkter/${s.slug}`}>
                     <span className="service-others-icon" aria-hidden="true">
                       <ServiceIcon icon={s.icon} size={22} />
                     </span>
@@ -118,7 +118,7 @@ function ServicePage({ service, onContactClick }: ServicePageProps) {
                 </li>
               ))}
             </ul>
-            <a className="service-back" href="/#ydelser">
+            <a className="service-back" href="/#produkter">
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                 <path d="M19 12H5m5-5-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

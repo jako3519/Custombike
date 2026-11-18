@@ -84,7 +84,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 // Noegler til login-cookies gemmes i databasen (ikke i containeren, som nulstilles ved hver genstart)
 builder.Services.AddDataProtection()
-    .SetApplicationName("carlton-paa-taget")
+    .SetApplicationName("custombike")
     .PersistKeysToDbContext<DataContext>();
 
 // --- Besoegsstatistik (cookiefri, kun synlig for admin) - se Controllers/Analytics ---
@@ -106,7 +106,7 @@ var authBuilder = builder.Services
     })
     .AddCookie(options =>
     {
-        options.Cookie.Name = "carlton.auth";
+        options.Cookie.Name = "custombike.auth";
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Strict;
         // Lokalt kører vi http; i drift må cookien kun sendes over https
@@ -251,20 +251,24 @@ var app = builder.Build();
 // Skal ligge først, så resten af pipelinen ser den rigtige scheme (https)
 app.UseForwardedHeaders();
 
-// Primaert domaene er carltonpaataget.dk: sidevisninger paa www og fly.dev sendes videre med 301
-// (samme sti og query). Kun offentlig trafik gennem Fly-proxyen (har headeren Fly-Client-IP), saa
-// Flys interne health checks ikke paavirkes. /signin-google undtages, saa et Google-login der er
-// startet paa en anden adresse kan gennemfoeres der (login-cookien hoerer til den adresse).
-var canonicalHost = (config["Site:CanonicalHost"] ?? "carltonpaataget.dk").Trim().ToLowerInvariant();
-var redirectHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+// Valgfrit primært domæne (Site:CanonicalHost). Tomt = ingen viderestilling.
+// www.<vært> og evt. Site:RedirectHosts (kommasepareret) sendes til det primære domæne med 301.
+// Kun offentlig trafik gennem Fly-proxyen (har headeren Fly-Client-IP), saa Flys interne health
+// checks ikke paavirkes. /signin-google undtages, saa et Google-login der er startet paa en anden
+// adresse kan gennemfoeres der (login-cookien hoerer til den adresse).
+var canonicalHost = (config["Site:CanonicalHost"] ?? "").Trim().ToLowerInvariant();
+var redirectHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+if (canonicalHost.Length > 0)
 {
-    "www." + canonicalHost,
-    "carlton-paa-taget.fly.dev",
-};
+    redirectHosts.Add("www." + canonicalHost);
+    foreach (var extra in (config["Site:RedirectHosts"] ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        redirectHosts.Add(extra);
+}
 app.Use(async (ctx, next) =>
 {
     var req = ctx.Request;
     if (!isDev
+        && canonicalHost.Length > 0
         && req.Headers.ContainsKey("Fly-Client-IP")
         && redirectHosts.Contains(req.Host.Host)
         && (HttpMethods.IsGet(req.Method) || HttpMethods.IsHead(req.Method))
@@ -362,9 +366,12 @@ app.MapGet("/admin", (HttpContext ctx) =>
 });
 
 // sitemap.xml laves ud fra databasen, saa nye ydelser kommer med automatisk
-app.MapGet("/sitemap.xml", async (DataContext db, CancellationToken ct) =>
+app.MapGet("/sitemap.xml", async (HttpContext ctx, DataContext db, CancellationToken ct) =>
 {
-    var siteUrl = (config["Site:Url"] ?? "https://carltonpaataget.dk/").TrimEnd('/') + "/";
+    var configured = (config["Site:Url"] ?? "").Trim();
+    var siteUrl = string.IsNullOrWhiteSpace(configured)
+        ? $"{ctx.Request.Scheme}://{ctx.Request.Host}/"
+        : configured.TrimEnd('/') + "/";
     var services = await db.Services.AsNoTracking()
         .OrderBy(s => s.SortOrder).ThenBy(s => s.Id)
         .Select(s => new { s.Slug, s.UpdatedAt })
@@ -378,7 +385,7 @@ app.MapGet("/sitemap.xml", async (DataContext db, CancellationToken ct) =>
     xml.Append($"  <url>\n    <loc>{System.Security.SecurityElement.Escape(siteUrl + "kontakt")}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n");
     foreach (var s in services)
     {
-        xml.Append($"  <url>\n    <loc>{System.Security.SecurityElement.Escape(siteUrl + "ydelser/" + s.Slug)}</loc>\n");
+        xml.Append($"  <url>\n    <loc>{System.Security.SecurityElement.Escape(siteUrl + "produkter/" + s.Slug)}</loc>\n");
         xml.Append($"    <lastmod>{s.UpdatedAt.ToUniversalTime():yyyy-MM-dd}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n");
     }
     xml.Append("</urlset>\n");
@@ -386,7 +393,7 @@ app.MapGet("/sitemap.xml", async (DataContext db, CancellationToken ct) =>
 });
 
 // Alt andet end /api går til frontenden
-// Siderne (forsiden, /ydelser/<navn> m.m.) renderes paa serveren med de aktuelle tekster, billeder
+// Siderne (forsiden, /produkter/<navn> m.m.) renderes paa serveren med de aktuelle tekster, billeder
 // og ydelser, saa HTML'en altid indeholder hele siden. Browseren overtager den bagefter (hydrate).
 // En ydelse der ikke findes giver 404 (med en "siden findes ikke"-side).
 app.MapFallback(async (HttpContext ctx, Backend.Prerender.PrerenderService prerender, DataContext db) =>
@@ -399,7 +406,7 @@ app.MapFallback(async (HttpContext ctx, Backend.Prerender.PrerenderService prere
     }
     if (page.RedirectTo is not null)
     {
-        // Query (fx ?utm_source=...) foer et evt. #-anker: /?x=1#ydelser
+        // Query (fx ?utm_source=...) foer et evt. #-anker: /?x=1#produkter
         var hashAt = page.RedirectTo.IndexOf('#');
         var target = hashAt < 0
             ? page.RedirectTo + ctx.Request.QueryString.ToUriComponent()

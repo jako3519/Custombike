@@ -94,7 +94,7 @@ function StatsModal({ onClose }: { onClose: () => void }) {
     if (target.startsWith("gallery:")) return `Galleri: billede ${target.slice(8)}`;
     if (target.startsWith("service:")) {
       const slug = target.slice(8);
-      return `Ydelse: ${services.find((s) => s.slug === slug)?.title ?? slug}`;
+      return `Produkt: ${services.find((s) => s.slug === slug)?.title ?? slug}`;
     }
     return target;
   };

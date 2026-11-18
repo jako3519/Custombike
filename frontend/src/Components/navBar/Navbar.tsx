@@ -79,7 +79,7 @@ function Navbar({ onContactClick, currentSlug }: NavbarProps) {
           {/* "Ydelser" scroller til sektionen; pilen (eller hover) viser alle ydelser.
               Linkene til ydelserne ligger altid i HTML'en (også når menuen er lukket). */}
           <div className={`nav-item nav-dropdown${servicesOpen ? " open" : ""}`}>
-            <a href="/#ydelser" onClick={closeMenus}>
+            <a href="/#produkter" onClick={closeMenus}>
               {servicesLabel}
             </a>
             {services.length > 0 && (
@@ -102,7 +102,7 @@ function Navbar({ onContactClick, currentSlug }: NavbarProps) {
                 {services.map((s) => (
                   <li key={s.id}>
                     <a
-                      href={`/ydelser/${s.slug}`}
+                      href={`/produkter/${s.slug}`}
                       aria-current={s.slug === currentSlug ? "page" : undefined}
                       onClick={closeMenus}
                     >
